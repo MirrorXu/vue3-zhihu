@@ -6,3 +6,11 @@ export interface Column{
     description: string,
     [k: string]: any,
 }
+
+
+export interface User {
+    name:string,
+    gender:string,
+    isLogin: boolean,
+    [k : string]: any
+}

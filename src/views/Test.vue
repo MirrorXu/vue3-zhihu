@@ -1,13 +1,17 @@
 <template>
-  <dvi>
-    <h1>测试</h1>
-    <ColumnList :list="listData"></ColumnList>
-  </dvi>
+  <el-container>
+    <el-header>
+      <GlobalHeader :user="user"></GlobalHeader>
+    </el-header>
+    <el-main>
+      <ColumnList :list="listData"></ColumnList>
+    </el-main>
+  </el-container>
 </template>
 <script setup lang="ts">
+import GlobalHeader  from "@/components/GlobalHeader.vue";
 import ColumnList from "@/components/ColumnList.vue";
-import {Column} from '@/api/data.type'
-
+import {Column , User} from '@/api/data.type'
 const listData: Column[] = Array.from({length: 10}).map((v, i) => {
   const index = i + 1
   return {
@@ -18,9 +22,17 @@ const listData: Column[] = Array.from({length: 10}).map((v, i) => {
   }
 })
 
+const user:User = {
+  isLogin:false,
+  name:'',
+  gender:'',
+}
+
 </script>
 
 
 <style scoped lang="scss">
-
+::v-deep(.el-header){
+  border-bottom: 1px solid var(--el-color-primary);
+}
 </style>

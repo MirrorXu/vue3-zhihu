@@ -7,6 +7,10 @@ defineProps({
     type: Array as PropType<Column[]>,
   }
 })
+
+function goColumn(column: Column) {
+  console.log('goColumn' , Column)
+}
 </script>
 
 <template>
@@ -23,7 +27,7 @@ defineProps({
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
           <div style="text-align: center">
-            <el-button >进入专栏</el-button>
+            <el-button plain link type="primary" @click="goColumn(item)">进入专栏</el-button>
           </div>
         </div>
         </el-card>

@@ -23,9 +23,9 @@ const listData: Column[] = Array.from({length: 10}).map((v, i) => {
 })
 
 const user:User = {
-  isLogin:false,
-  name:'',
-  gender:'',
+  isLogin: true,
+  name:'Mirror',
+  gender:'男',
 }
 
 </script>

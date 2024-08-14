@@ -41,14 +41,13 @@ const form = reactive({
       {
         type: 'required', message: "请输入密码"
       },
-      {type: 'password', message: '密码格式错误，6-8位'}
+      {type: 'range',  message: '密码长度6-8位'  , min:{length:6 , message:'密码长度不能小于6位'} , max:{length:8 } ,}
     ]
   }
 })
 
 function login() {
   const {email: {value: emailVal}, password: {value: passwordVal}} = form;
-
   console.log(emailVal, passwordVal)
 }
 

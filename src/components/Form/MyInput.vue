@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {PropType, reactive, defineProps, defineEmits, useAttrs} from "vue";
+import {PropType, reactive, defineProps, defineEmits, useAttrs, warn} from "vue";
 import {email as emailReg, password as passwordReg} from "@/helper/reg";
 
 interface FieldType {
@@ -28,11 +28,17 @@ interface FieldType {
   message: string
 }
 
-type RuleType = 'required' | 'email' | 'password';
+type RuleType = 'required' | 'email' | 'password' | 'range';
 // type Trigger = '' | 'click'
+interface MinMax {
+  message: string,
+  length: number,
+}
 interface RuleItem {
   type: RuleType | RegExp,
   message?: string,
+  min?:MinMax | number,
+  max?:MinMax | number,
 }
 const props = defineProps({
   width: {
@@ -67,6 +73,34 @@ function handleInput(e: Event) {
   inputRef.val = currentValue
   emit('update:modelValue', currentValue)
 }
+function validateByRange(rule: RuleItem , ref:FieldType) {
+  const {min , max } = rule
+  const val:string = ref.val
+  let passed = true
+  if(typeof min !== 'number' && typeof max === 'number' && typeof min !== 'object' && typeof max !== 'object'){
+    warn('range validation failed'  ,rule)
+  }
+  debugger
+  if(typeof min === "number"){
+    ref.message =rule.message || ''
+     passed = val.length >= min
+    if(!passed) return passed
+  }else if(min && min.length){
+    ref.message = min.message || rule.message || ''
+    passed = val.length >= min.length
+    if(!passed) return passed
+  }
+  if(typeof max === 'number'){
+    ref.message = rule.message || ''
+    passed = val.length <= max
+    if(!passed) return passed
+  }else if(max && max.length){
+    ref.message = max.message || rule.message || ''
+    passed = val.length <= max.length
+    if(!passed) return passed
+  }
+  return passed
+}
 function validate() {
   let allPassed = true
   if (props.rules && props.rules.length > 0) {
@@ -85,6 +119,9 @@ function validate() {
             break
           case "password":
             passed = passwordReg.test(inputRef.val)
+            break
+          case "range":
+            passed = validateByRange(rule , inputRef)
             break
         }
       }

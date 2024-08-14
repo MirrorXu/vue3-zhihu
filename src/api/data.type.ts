@@ -4,7 +4,7 @@ export interface Column{
     title: string,
     avatar: string,
     description: string,
-    [k: string]: any,
+    [k: string]: unknown,
 }
 
 
@@ -12,5 +12,5 @@ export interface User {
     name:string,
     gender:string,
     isLogin: boolean,
-    [k : string]: any
+    [k : string]: unknown
 }

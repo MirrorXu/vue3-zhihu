@@ -10,14 +10,14 @@ defineProps({
   }
 })
 
-function handleCommand(...args: any[]) {
+function handleCommand(...args: never[]) {
   console.log('handleCommand:',args)
 }
 
-function handleLeftClick(...args: any[]) {
+function handleLeftClick(...args: never[]) {
   console.log('handleLeftClick:',args)
 }
-function handleVisibleChange(...args: any[]) {
+function handleVisibleChange(...args: never[]) {
   console.log('handleVisibleChange:',args)
 }
 </script>

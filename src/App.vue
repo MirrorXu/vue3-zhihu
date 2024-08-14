@@ -3,15 +3,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, shallowRef, reactive} from "vue";
+import {defineComponent, ref} from "vue";
 
 export default defineComponent({
   setup(props, context) {
     const isOpen = ref(true)
-    const refObj = ref({name: 'Mirror'})
-    const shallowObject = shallowRef({name: 'Mirror'})
-    const reactiveObj = reactive({name: 'reactive'})
-
+    // const refObj = ref({name: 'Mirror'})
+    // const shallowObject = shallowRef({name: 'Mirror'})
+    // const reactiveObj = reactive({name: 'reactive'})
+    console.log(props , context)
     const toggleModel = () => {
       isOpen.value = !isOpen.value;
     }

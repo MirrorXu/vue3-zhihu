@@ -9,7 +9,7 @@ defineProps({
 })
 
 function goColumn(column: Column) {
-  console.log('goColumn' , Column)
+  console.log('goColumn' , column)
 }
 </script>
 

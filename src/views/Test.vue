@@ -23,7 +23,7 @@ const listData: Column[] = Array.from({length: 10}).map((v, i) => {
 })
 
 const user:User = {
-  isLogin: true,
+  isLogin: false,
   name:'Mirror',
   gender:'男',
 }

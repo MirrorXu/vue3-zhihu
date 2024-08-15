@@ -6,21 +6,19 @@
     <slot name="label">
       <div v-if="label" class="label">{{ label }}</div>
     </slot>
-
-    <!--    v-bind="$attrs"-->
     <input
         :class="['input' , inputRef.error ? 'input-error' :'']"
         :value="inputRef.val"
         @input="handleInput"
-        @blur="validate"
         v-bind="$attrs"
     >
     <span v-if="inputRef.error" class="error-tip">{{ inputRef.message }}</span>
   </div>
 </template>
 <script setup lang="ts">
-import {PropType, reactive, defineProps, defineEmits, useAttrs, warn} from "vue";
+import {PropType, reactive, defineProps, defineEmits, useAttrs, warn, onUnmounted} from "vue";
 import {email as emailReg, password as passwordReg} from "@/helper/reg";
+import bus from "@/components/Form/bus";
 
 interface FieldType {
   val: string,
@@ -29,17 +27,20 @@ interface FieldType {
 }
 
 type RuleType = 'required' | 'email' | 'password' | 'range';
+
 // type Trigger = '' | 'click'
 interface MinMax {
   message: string,
   length: number,
 }
+
 interface RuleItem {
   type: RuleType | RegExp,
   message?: string,
-  min?:MinMax | number,
-  max?:MinMax | number,
+  min?: MinMax | number,
+  max?: MinMax | number,
 }
+
 const props = defineProps({
   width: {
     type: Number,
@@ -68,39 +69,41 @@ const inputRef = reactive<FieldType>({
   message: ''
 })
 const emit = defineEmits(['update:modelValue'])
+
 function handleInput(e: Event) {
   const currentValue = (e.target as HTMLInputElement).value
   inputRef.val = currentValue
   emit('update:modelValue', currentValue)
 }
-function validateByRange(rule: RuleItem , ref:FieldType) {
-  const {min , max } = rule
-  const val:string = ref.val
+
+function validateByRange(rule: RuleItem, ref: FieldType) {
+  const {min, max} = rule
+  const val: string = ref.val
   let passed = true
-  if(typeof min !== 'number' && typeof max === 'number' && typeof min !== 'object' && typeof max !== 'object'){
-    warn('range validation failed'  ,rule)
+  if (typeof min !== 'number' && typeof max === 'number' && typeof min !== 'object' && typeof max !== 'object') {
+    warn('range validation failed', rule)
   }
-  debugger
-  if(typeof min === "number"){
-    ref.message =rule.message || ''
-     passed = val.length >= min
-    if(!passed) return passed
-  }else if(min && min.length){
+  if (typeof min === "number") {
+    ref.message = rule.message || ''
+    passed = val.length >= min
+    if (!passed) return passed
+  } else if (min && min.length) {
     ref.message = min.message || rule.message || ''
     passed = val.length >= min.length
-    if(!passed) return passed
+    if (!passed) return passed
   }
-  if(typeof max === 'number'){
+  if (typeof max === 'number') {
     ref.message = rule.message || ''
     passed = val.length <= max
-    if(!passed) return passed
-  }else if(max && max.length){
+    if (!passed) return passed
+  } else if (max && max.length) {
     ref.message = max.message || rule.message || ''
     passed = val.length <= max.length
-    if(!passed) return passed
+    if (!passed) return passed
   }
   return passed
 }
+
 function validate() {
   let allPassed = true
   if (props.rules && props.rules.length > 0) {
@@ -121,7 +124,7 @@ function validate() {
             passed = passwordReg.test(inputRef.val)
             break
           case "range":
-            passed = validateByRange(rule , inputRef)
+            passed = validateByRange(rule, inputRef)
             break
         }
       }
@@ -136,7 +139,17 @@ function validate() {
   return allPassed
 }
 
-
+function reset(){
+  inputRef.val = ''
+  inputRef.error = false
+  inputRef.message = ''
+}
+bus.emit('validator', validate)
+bus.emit('resetor', reset)
+onUnmounted(() => {
+  bus.off('validator', validate)
+  bus.off('resetor', reset)
+})
 const attrs = useAttrs()
 console.log('attrs:', attrs)
 

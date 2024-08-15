@@ -2,24 +2,27 @@
   <div class="container">
     <h1>登录/注册</h1>
     <div class="form">
-      <template v-for="(field , fieldName) in form" :key="fieldName">
-        <MyInput
-            :type="field.type"
-            :label="field.label"
-            :placeholder="field.placeholder"
-            :rules="field.rules"
-            v-model="field.value"
-        ></MyInput>
-      </template>
+      <MyForm @submit="handleSubmit" ref="refForm">
+        <template v-for="(field , fieldName) in form" :key="fieldName">
+          <MyInput
+              :type="field.type"
+              :label="field.label"
+              :placeholder="field.placeholder"
+              :rules="field.rules"
+              v-model="field.value"
+          ></MyInput>
+        </template>
+      </MyForm>
       <div class="btns">
-        <el-button @click="login" type="primary">登录</el-button>
+        <el-button type="success" @click="doSubmit">手动调用组件submit</el-button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import MyInput from "@/components/Form/MyInput.vue";
+import MyForm from "@/components/Form/MyForm.vue";
 
 const form = reactive({
   email: {
@@ -41,15 +44,30 @@ const form = reactive({
       {
         type: 'required', message: "请输入密码"
       },
-      {type: 'range',  message: '密码长度6-8位'  , min:{length:6 , message:'密码长度不能小于6位'} , max:{length:8 } ,}
+      {type: 'range', message: '密码长度6-8位', min: {length: 6, message: '密码长度不能小于6位'}, max: {length: 8},}
     ]
   }
 })
 
-function login() {
-  const {email: {value: emailVal}, password: {value: passwordVal}} = form;
-  console.log(emailVal, passwordVal)
+
+// eslint-disable
+const refForm = ref<any>()
+
+function handleSubmit(e) {
+  console.log(e)
 }
+
+function doSubmit() {
+  refForm.value.submit().then(res => {
+    console.log(res)
+    if (res.success) {
+      console.log('检验成功')
+    }else{
+      console.log('检验失败')
+    }
+  })
+}
+
 
 </script>
 
@@ -63,6 +81,7 @@ function login() {
   justify-content: center;
   //border: 10px solid red;
   height: 100vh;
+
   .form {
     max-width: 400px;
     box-shadow: 0 2px 2px 4px var(--el-border-color);

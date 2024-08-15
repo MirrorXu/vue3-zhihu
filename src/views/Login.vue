@@ -2,7 +2,7 @@
   <div class="container">
     <h1>登录/注册</h1>
     <div class="form">
-      <MyForm @submit="handleSubmit" ref="refForm">
+      <MyForm ref="refForm">
         <template v-for="(field , fieldName) in form" :key="fieldName">
           <MyInput
               :type="field.type"
@@ -12,10 +12,13 @@
               v-model="field.value"
           ></MyInput>
         </template>
+        <template #submit>
+          <el-button type="success" @click="doSubmit">提交</el-button>
+        </template>
+        <template #reset>
+          <el-button type="danger" @click="doRest">重置</el-button>
+        </template>
       </MyForm>
-      <div class="btns">
-        <el-button type="success" @click="doSubmit">手动调用组件submit</el-button>
-      </div>
     </div>
   </div>
 </template>
@@ -23,6 +26,13 @@
 import {reactive, ref} from "vue";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
+import {useRouter, useRoute} from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+console.log('router:', router)
+console.log('route:', route)
 
 const form = reactive({
   email: {
@@ -62,10 +72,24 @@ function doSubmit() {
     console.log(res)
     if (res.success) {
       console.log('检验成功')
-    }else{
+      const {redirect} = route.query
+      localStorage.setItem('isLogin', '1')
+      localStorage.setItem('email', form.email.value)
+      localStorage.setItem('password', form.password.value)
+      if (redirect) {
+        router.push({name: redirect})
+      } else {
+        router.push({name: 'home'})
+      }
+      console.log()
+    } else {
       console.log('检验失败')
     }
   })
+}
+
+function doRest() {
+  refForm.value.reset()
 }
 
 
@@ -89,10 +113,11 @@ function doSubmit() {
     border-radius: 2px;
     width: 300px;
 
-    .btns {
+    ::v-deep(.btns) {
       display: flex;
       margin-top: 10px;
       justify-content: center;
+      //background-color: darkcyan;
     }
   }
 

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-import {PropType  , defineProps} from "vue";
+import {PropType, defineProps, nextTick} from "vue";
+import {useRouter} from "vue-router";
 import {User} from '@/api/data.type'
 
+const router = useRouter();
 defineProps({
   user: {
     type: Object as PropType<User>,
@@ -10,15 +12,21 @@ defineProps({
   }
 })
 
-function handleCommand(...args: never[]) {
-  console.log('handleCommand:',args)
+function handleCommand(command: string) {
+  console.log(command)
+  switch (command) {
+    case 'c':
+      doExit()
+      break
+  }
 }
 
-function handleLeftClick(...args: never[]) {
-  console.log('handleLeftClick:',args)
-}
-function handleVisibleChange(...args: never[]) {
-  console.log('handleVisibleChange:',args)
+function doExit() {
+  console.log(router)
+  nextTick(() => {
+    localStorage.setItem('isLogin', '')
+    router.push({name: 'login'})
+  })
 }
 </script>
 
@@ -34,8 +42,6 @@ function handleVisibleChange(...args: never[]) {
       type="primary"
       :hide-on-click="false"
       @command="handleCommand"
-      @click="handleLeftClick"
-      @visible-change="handleVisibleChange"
   >
     <!--        您好，{{ user.name }}-->
     您好，{{ user.name }}

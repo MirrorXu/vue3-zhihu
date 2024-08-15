@@ -1,12 +1,14 @@
 <template>
   <div>
     <slot></slot>
-    <slot name="submit">
-      <el-button type="primary" @click="handleSubmit">submit</el-button>
-    </slot>
-    <slot name="reset">
-      <el-button type="warning" @click="reset">reset</el-button>
-    </slot>
+    <div class="btns">
+      <slot name="submit">
+        <el-button type="primary" @click="handleSubmit">submit</el-button>
+      </slot>
+      <slot name="reset">
+        <el-button type="warning" @click="reset">reset</el-button>
+      </slot>
+    </div>
   </div>
 </template>
 <script setup lang="ts">

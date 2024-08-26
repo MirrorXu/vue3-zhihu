@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import {ChromeFilled} from "@element-plus/icons-vue";
-
+import {useRouter} from "vue-router";
+const router = useRouter()
+const goHome = ()=>{
+  router.replace({name:'home'})
+}
 </script>
 
 <template>
   <div class="site-title">
     <slot name="logo">
-      <el-icon size="26px" color="#409eff" style="margin-right: 8px">
+      <el-icon size="26px" color="#409eff" style="margin-right: 8px" @click="goHome">
         <ChromeFilled/>
       </el-icon>
     </slot>
@@ -21,9 +25,11 @@ import {ChromeFilled} from "@element-plus/icons-vue";
 .site-title {
   display: flex;
   align-items: center;
+  user-select: none;
 
   .title {
     color: var(--jjext-color-secondary-app);
+
   }
 }
 

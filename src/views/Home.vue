@@ -13,10 +13,13 @@ import {reactive} from "vue";
 import ColumnList from "@/components/ColumnList.vue";
 import {columnList } from '@/api/testData'
 import Layout from "@/components/Layout/Layout.vue";
+import {useRouter} from "vue-router";
 const listData = reactive(columnList)
 console.log(listData)
+const router  = useRouter()
 function handleCreateArticle() {
   console.log('创建文章')
+  router.push({name:'createArticle'})
 }
 
 </script>

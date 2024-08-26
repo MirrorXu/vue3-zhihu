@@ -4,7 +4,8 @@ export interface User {
     name: string,
     gender: string,
     isLogin: boolean,
-
+    email: string,
+    // password: string,
     [k: string]: unknown
 }
 

@@ -62,8 +62,8 @@ const handleSubmit = function (e: MouseEvent) {
 
 defineExpose({
   validate() {
-    return new Promise(resolve => {
-      return validate()
+    return new Promise((resolve ,reject)=> {
+      validate() ? resolve(true) : reject(false)
     })
   },
   submit: () => {

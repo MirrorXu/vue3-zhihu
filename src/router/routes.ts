@@ -13,7 +13,9 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'home',
         component:()=> import(/* webpackChunkName: "about" */'@/views/Home.vue'),
+        meta:{
 
+        }
     },
     {
         path: '/login',
@@ -25,10 +27,20 @@ const routes: Array<RouteRecordRaw> = [
         name: 'column',
         component: () => import(/* webpackChunkName: "column" */ '../views/Column.vue'),
         meta:{
-            title:'专栏'
+            title:'专栏',
         }
     },
-
+    {
+        name:"article",
+        path:'/article',
+        children:[
+            {
+                name:'createArticle',
+                path:'create',
+                component:()=> import( /* webpackChunkName: "column" */'@/views/Article/Create.vue'),
+            }
+        ]
+    },
     {
         path: '/test',
         name: 'test',

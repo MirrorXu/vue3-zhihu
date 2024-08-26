@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouter} from "vue-router";
 import UserDropdown from '@/components/UserDropDown.vue'
 import {PropType, defineProps} from "vue";
 import {User} from '@/api/testData'
@@ -10,6 +11,12 @@ defineProps({
   }
 })
 
+const router =  useRouter()
+
+const goLogin = ()=>{
+  router.push('/login')
+}
+
 </script>
 
 <template>
@@ -19,8 +26,8 @@ defineProps({
     </slot>
     <div class="right">
       <template v-if="!user.isLogin">
-        <el-button plain type="primary">登录</el-button>
-        <el-button type="primary">注册</el-button>
+        <el-button plain type="primary" @click="goLogin">登录</el-button>
+        <el-button type="primary" @click="goLogin">注册</el-button>
       </template>
       <template v-else>
         <UserDropdown :user="user"></UserDropdown>

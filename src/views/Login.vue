@@ -24,9 +24,11 @@
 </template>
 <script setup lang="ts">
 import {reactive, ref} from "vue";
+import {useStore} from "vuex";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
+import {User} from "@/api/testData";
 
 const router = useRouter()
 const route = useRoute()
@@ -63,21 +65,26 @@ const form = reactive({
 // eslint-disable
 const refForm = ref<any>()
 
-function handleSubmit(e) {
-  console.log(e)
-}
+// function handleSubmit(e) {
+//   console.log(e)
+// }
 
+const store = useStore()
 function doSubmit() {
   refForm.value.submit().then(res => {
     console.log(res)
-    if (res.success) {
+    if (res && res.success) {
       console.log('检验成功')
+      const user:User =  {
+        isLogin:true,
+        email: form.email.value || '游客',
+        gender:'男',
+        name: '',
+      }
+      store.commit('changeUser' , user)
       const {redirect} = route.query
-      localStorage.setItem('isLogin', '1')
-      localStorage.setItem('email', form.email.value)
-      localStorage.setItem('password', form.password.value)
       if (redirect) {
-        router.push({name: redirect})
+        router.push({name: redirect as string})
       } else {
         router.push({name: 'home'})
       }

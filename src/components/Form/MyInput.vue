@@ -7,11 +7,19 @@
       <div v-if="label" class="label">{{ label }}</div>
     </slot>
     <input
+        v-if="tag === 'input'"
         :class="['input' , inputRef.error ? 'input-error' :'']"
         :value="inputRef.val"
         @input="handleInput"
         v-bind="$attrs"
     >
+    <textarea
+        v-else-if="tag === 'textarea'"
+        :class="['input' , inputRef.error ? 'input-error' :'']"
+        :value="inputRef.val"
+        @input="handleInput"
+        v-bind="$attrs"
+    ></textarea>
     <span v-if="inputRef.error" class="error-tip">{{ inputRef.message }}</span>
   </div>
 </template>
@@ -34,14 +42,18 @@ interface MinMax {
   length: number,
 }
 
-interface RuleItem {
+export interface RuleItem {
   type: RuleType | RegExp,
   message?: string,
   min?: MinMax | number,
   max?: MinMax | number,
 }
-
+export type InputType = 'input' | 'textarea'
 const props = defineProps({
+  tag:{
+    type: String as  PropType<InputType>,
+    default:'input',
+  },
   width: {
     type: Number,
     required: false,

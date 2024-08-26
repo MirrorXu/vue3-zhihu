@@ -15,19 +15,21 @@
   </el-container>
 </template>
 <script setup lang="ts">
-
+import {useStore} from "vuex";
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import Container from "@/components/Container.vue";
 import {User} from "@/api/testData";
-
-const isLogin = !!localStorage.getItem('isLogin')
-const email = localStorage.getItem('isLogin') || ''
-const user: User = {
-  isLogin: isLogin,
-  name: isLogin ? 'Mirror' : '',
-  email: email,
-  gender: isLogin ? '男' : '',
-}
+import {computed} from "vue";
+// const isLogin = !!localStorage.getItem('isLogin')
+// const email = localStorage.getItem('isLogin') || ''
+// const user: User = {
+//   isLogin: isLogin,
+//   name: isLogin ? 'Mirror' : '',
+//   email: email,
+//   gender: isLogin ? '男' : '',
+// }
+const store = useStore()
+const user  = computed(() => store.state.user)
 </script>
 
 <style scoped lang="scss">
@@ -42,6 +44,7 @@ const user: User = {
   min-height: $height;
   .content{
      min-height: $height !important;
+    background-color: #d0fae7;
   }
 }
 

@@ -16,6 +16,7 @@ npm run lint
 ```
 ## 项目文档
 - [文档：http://docs.vikingship.xyz](http://docs.vikingship.xyz)
+- [接口文档：http://api.vikingship.xyz/public/swagger/index.html](http://api.vikingship.xyz/public/swagger/index.html)
 ## 工具版本
 - node@12.5.0
 - @vue/cli@4.5.4

@@ -9,7 +9,6 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App)
 
-
 console.log(ElementPlusIconsVue)
 console.log(Object.keys(ElementPlusIconsVue))
 const icons = Object.entries(ElementPlusIconsVue)

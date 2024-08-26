@@ -1,22 +1,17 @@
 <template>
-  <el-container>
-    <el-header>
-      <GlobalHeader :user="user"></GlobalHeader>
-    </el-header>
-    <el-main>
-      <div class="banner">
-        <img src="../assets/a.svg" class="svgImg" alt="">
-        <el-button type="primary" @click="handleCreateArticle">创建文章</el-button>
-      </div>
-      <ColumnList :list="listData"></ColumnList>
-    </el-main>
-  </el-container>
+  <layout>
+    <div class="banner">
+      <img src="../assets/a.svg" class="svgImg" alt="">
+      <el-button type="primary" @click="handleCreateArticle">开始写文章</el-button>
+    </div>
+    <ColumnList :list="listData"></ColumnList>
+  </layout>
 </template>
-<script setup lang="ts">
-import GlobalHeader from "@/components/GlobalHeader.vue";
-import ColumnList from "@/components/ColumnList.vue";
-import {Column, User} from '@/api/data.type'
 
+<script setup lang="ts">
+import ColumnList from "@/components/ColumnList.vue";
+import {Column} from '@/api/data.type'
+import Layout from "@/components/Layout/Layout.vue";
 const listData: Column[] = Array.from({length: 10}).map((v, i) => {
   const index = i + 1
   return {
@@ -27,16 +22,8 @@ const listData: Column[] = Array.from({length: 10}).map((v, i) => {
   }
 })
 
-const isLogin = !!localStorage.getItem('isLogin')
-const email = localStorage.getItem('isLogin') || ''
-const user: User = {
-  isLogin: isLogin,
-  name: isLogin ? 'Mirror' : '',
-  email: email,
-  gender: isLogin ? '男' : '',
-}
 
-function handleCreateArticle(){
+function handleCreateArticle() {
   console.log('创建文章')
 }
 
@@ -44,17 +31,21 @@ function handleCreateArticle(){
 
 
 <style scoped lang="scss">
-::v-deep(.el-header) {
-  border-bottom: 1px solid var(--el-color-primary);
-}
-.banner{
+
+.banner {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
-}
-.svgImg{
+  .svgImg {
+    width: 200px;
+  }
 
+  .el-button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }
+
 </style>

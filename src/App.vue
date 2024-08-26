@@ -1,5 +1,7 @@
 <template>
-  <router-view/>
+ <div id="app">
+   <router-view/>
+ </div>
 </template>
 
 <script lang="ts">
@@ -27,5 +29,9 @@ export default defineComponent({
 html , body{
   padding: 0;
   margin: 0;
+}
+#app{
+  min-height: 100vh;
+  //background-color: darkgoldenrod;
 }
 </style>

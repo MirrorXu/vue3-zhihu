@@ -20,6 +20,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'login',
         component: () => import(/* webpackChunkName: "Sign" */ '../views/Login.vue')
     },
+    {
+        path: '/column/:id',
+        name: 'column',
+        component: () => import(/* webpackChunkName: "column" */ '../views/Column.vue'),
+        meta:{
+            title:'专栏'
+        }
+    },
 
     {
         path: '/test',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {PropType, defineProps} from 'vue'
-import {Column} from '@/api/data.type'
+import {Column} from '@/api/testData'
 import {useRouter} from "vue-router";
 
 const router = useRouter()

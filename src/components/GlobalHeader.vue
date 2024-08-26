@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UserDropdown from '@/components/UserDropDown.vue'
 import {PropType, defineProps} from "vue";
-import {User} from '@/api/data.type'
+import {User} from '@/api/testData'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 defineProps({
   user: {

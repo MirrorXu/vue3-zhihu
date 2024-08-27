@@ -2,30 +2,23 @@
 import Layout from "@/components/Layout/Layout.vue";
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import {useRoute, useRouter} from "vue-router";
-
+import store from "@/store";
 const route = useRoute()
 const router = useRouter()
-import {columnList, articleList} from '@/api/testData'
-import {reactive} from "vue";
 import {formatTime} from '@/util'
+import {computed, onBeforeMount} from "vue";
+import {Article} from "@/api/responseType";
 const id = route.params.id
 
-function loadColumnDataById(id: number | string) {
-  const column = columnList.find(column => column.id === id)
-  const articles = articleList.filter(article => article.columnId === id)
-  return {
-    column,
-    articles
-  }
-}
-
-const res = loadColumnDataById(Number(id))
-const columnRef = reactive(res)
-
-function handleClick(data: { id: number | string, [key: string]: any }) {
-  console.log(data)
-  const currentId = data.id
-  router.push({name: 'column', params: {id: currentId}});
+onBeforeMount(()=>{
+  store.dispatch('fetchColumnDetail' , id)
+  store.dispatch('fetchColumnArticles' , id)
+  console.log('sdsd')
+})
+const columnDetail = computed(()=> store.state.columnDetail)
+const columnArticles = computed(()=> store.state.columnArticles)
+function handleClick(article:Article) {
+  router.push({name: 'createArticle', params: {id: article._id}});
 }
 
 </script>
@@ -39,14 +32,18 @@ function handleClick(data: { id: number | string, [key: string]: any }) {
         </template>
       </SiteTitle>
     </template>
-    <h2>专栏：{{ id }}</h2>
     <div>
-      <div class="article" v-for="article in columnRef.articles" :key="article.id" @click="handleClick(article)">
-        <el-image fit="cover" :src="article.avatar" round></el-image>
-       <div>
+      <h2>专栏：{{ columnDetail.title }}</h2>
+      <p>{{columnDetail.description}}</p>
+    </div>
+
+    <div>
+      <div class="article" v-for="article in columnArticles" :key="article._id" @click="handleClick(article)">
+        <el-image fit="cover" :src="article.image?.url" round></el-image>
+       <div style="margin-left: 20px">
          <h3>{{ article.title }}</h3>
-         <p>{{ article.description }}</p>
-         <p>发布时间:{{formatTime(article.time , 'YYYY-MM-DD HH:mm:ss')}}</p>
+         <p>作者：{{ article.author }}</p>
+         <p>发布时间: {{formatTime(article.createdAt , 'YYYY-MM-DD HH:mm:ss')}}</p>
        </div>
       </div>
     </div>

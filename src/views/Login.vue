@@ -1,17 +1,31 @@
 <template>
   <div class="container">
-    <h1>登录/注册</h1>
+    <h1 v-if="isRegister">注册</h1>
+    <h1 v-else>登录</h1>
     <div class="form">
       <MyForm ref="refForm">
-        <template v-for="(field , fieldName) in form" :key="fieldName">
-          <MyInput
-              :type="field.type"
-              :label="field.label"
-              :placeholder="field.placeholder"
-              :rules="field.rules"
-              v-model="field.value"
-          ></MyInput>
-        </template>
+        <MyInput
+            :type="form.email.type"
+            :label="form.email.label"
+            :placeholder="form.email.placeholder"
+            :rules="form.email.rules"
+            v-model="form.email.value"
+        ></MyInput>
+        <MyInput
+            v-if="formType === 'register'"
+            :type="form.nickName.type"
+            :label="form.nickName.label"
+            :placeholder="form.nickName.placeholder"
+            :rules="form.nickName.rules"
+            v-model="form.nickName.value"
+        ></MyInput>
+        <MyInput
+            :type="form.password.type"
+            :label="form.password.label"
+            :placeholder="form.password.placeholder"
+            :rules="form.password.rules"
+            v-model="form.password.value"
+        ></MyInput>
         <template #submit>
           <el-button type="success" @click="doSubmit">提交</el-button>
         </template>
@@ -23,22 +37,26 @@
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {useStore} from "vuex";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
-import {User} from "@/api/testData";
+import {User} from "@/api/responseType";
 
 const router = useRouter()
 const route = useRoute()
 
 console.log('router:', router)
 console.log('route:', route)
+type Type = 'login' | 'register'
+
+const formType: Type = (route.query.type as Type) || 'login'
+const isRegister = computed(() => formType === 'register')
 
 const form = reactive({
   email: {
-    value: '',
+    value: 'xuxuee@163.com',
     label: '邮箱',
     placeholder: '请输入邮箱',
     type: 'email',
@@ -47,8 +65,18 @@ const form = reactive({
       {type: 'email', message: '邮箱格式不合法'}
     ]
   },
+  nickName: {
+    value: 'Mirror',
+    label: '昵称',
+    type: 'text',
+    placeholder: '请输入昵称',
+    rules: [
+      {type: 'required', message: "昵称不能为空"},
+      {type: 'range', message: '密码长度2-12位', min: {length: 2, message: '密码长度不能小于2位'}, max: {length: 12},}
+    ]
+  },
   password: {
-    value: '',
+    value: '123456',
     label: "密码",
     type: 'password',
     placeholder: '请输入密码',
@@ -70,28 +98,26 @@ const refForm = ref<any>()
 // }
 
 const store = useStore()
+
 function doSubmit() {
-  refForm.value.submit().then(res => {
-    console.log(res)
-    if (res && res.success) {
-      console.log('检验成功')
-      const user:User =  {
-        isLogin:true,
-        email: form.email.value || '游客',
-        gender:'男',
-        name: '',
-      }
-      store.commit('changeUser' , user)
-      const {redirect} = route.query
-      if (redirect) {
-        router.push({name: redirect as string})
-      } else {
-        router.push({name: 'home'})
-      }
-      console.log()
-    } else {
-      console.log('检验失败')
+  refForm.value.validate().then(() => {
+    const user = {
+      email: form.email.value,
+      password: form.password.value,
     }
+    if (isRegister.value) {
+      Object.assign(user, {nickName: form.nickName.value})
+    }
+    if(isRegister.value){
+      return store.dispatch('register', user)
+    }else{
+      return store.dispatch('login', user)
+    }
+  }).then(res => {
+    console.log(res)
+    // store.commit('changeUser' , user)
+  }).catch(() => {
+    console.log('失败')
   })
 }
 

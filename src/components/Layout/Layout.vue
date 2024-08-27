@@ -18,7 +18,7 @@
 import {useStore} from "vuex";
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import Container from "@/components/Container.vue";
-import {User} from "@/api/testData";
+import {User} from "@/api/responseType";
 import {computed} from "vue";
 // const isLogin = !!localStorage.getItem('isLogin')
 // const email = localStorage.getItem('isLogin') || ''

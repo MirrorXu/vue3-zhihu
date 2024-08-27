@@ -2,7 +2,7 @@
 import { useRouter} from "vue-router";
 import UserDropdown from '@/components/UserDropDown.vue'
 import {PropType, defineProps} from "vue";
-import {User} from '@/api/testData'
+import {User} from '@/api/responseType'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 defineProps({
   user: {

@@ -9,7 +9,7 @@ const imgList:ImageArr = [
     'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
 ]
 type ImageResult = string | ImageArr
-export const getImage = (num ?: number | undefined ):ImageResult=> {
+export const createImage = (num ?: number | undefined ):ImageResult=> {
     if(typeof num === 'undefined')  num = 1
     if(num < 1)   num = 1
     if(num > imgList.length) num = imgList.length

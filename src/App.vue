@@ -1,11 +1,12 @@
 <template>
- <div id="app">
-   <router-view/>
- </div>
+  <div id="app" v-loading="loading">
+    <router-view/>
+  </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {computed, defineComponent, ref, watch} from "vue";
+import {useStore} from "vuex";
 
 export default defineComponent({
   setup(props, context) {
@@ -13,24 +14,32 @@ export default defineComponent({
     // const refObj = ref({name: 'Mirror'})
     // const shallowObject = shallowRef({name: 'Mirror'})
     // const reactiveObj = reactive({name: 'reactive'})
-    console.log(props , context)
+    console.log(props, context)
     const toggleModel = () => {
       isOpen.value = !isOpen.value;
     }
+    const store = useStore()
+    const loading = computed(() => store.state.loading)
+    console.log(loading)
+    watch(loading, (newVal, oldVal) => {
+      console.log('loading:', newVal, oldVal)
+    })
     return {
       isOpen,
-      toggleModel
+      toggleModel,
+      loading
     }
   }
 })
 </script>
 
 <style lang="scss">
-html , body{
+html, body {
   padding: 0;
   margin: 0;
 }
-#app{
+
+#app {
   min-height: 100vh;
   //background-color: darkgoldenrod;
 }

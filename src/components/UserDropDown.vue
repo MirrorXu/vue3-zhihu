@@ -2,7 +2,7 @@
 
 import {PropType, defineProps, nextTick} from "vue";
 import {useRouter} from "vue-router";
-import {User} from '@/api/testData'
+import {User} from '@/api/responseType'
 
 const router = useRouter();
 defineProps({

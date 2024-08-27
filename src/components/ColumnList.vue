@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {PropType, defineProps} from 'vue'
-import {Column} from '@/api/testData'
+import {Column} from '@/api/responseType'
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -11,7 +11,7 @@ defineProps({
 })
 
 function goColumn(column: Column) {
-  const {id} = column
+  const {_id:id} = column
   router.push({name: 'column', params: {id}})
 }
 </script>
@@ -19,9 +19,9 @@ function goColumn(column: Column) {
 <template>
   <div>
     <ul>
-      <li v-for="item in list" :key="item.id">
+      <li v-for="item in list" :key="item._id">
         <el-card shadow="hover" class="card">
-          <el-image :src="item.avatar">
+          <el-image :src="item.avatar.url+'?x-oss-process=image/resize,m_pad,h_100,w_100'">
             <template #placeholder>
               <div class="image-slot">Loading<span class="dot">...</span></div>
             </template>

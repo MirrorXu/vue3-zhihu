@@ -1,5 +1,4 @@
 import axios from "axios";
-import {useStore} from "vuex";
 import store from "@/store";
 // 接口校验参数
 const icode = 'C4E4FD16507DC7F5'
@@ -9,7 +8,7 @@ const request = axios.create({
 request.interceptors.request.use(
     (config) => {
         // get 请求，添加到url中
-        if (config.method!.toLowerCase() === 'get') {
+        if ((config.method as string).toLowerCase() === 'get') {
             config.params = config.params || {}
             Object.assign(config.params, {icode})
         } else { // 其他请求添加到data上
@@ -19,13 +18,15 @@ request.interceptors.request.use(
                 Object.assign(config.data, {icode})
             }
         }
+        if(store.state.token){
+            config.headers.Authorization = `Bearer ${store.state.token}`
+        }
         store.commit('setLoading', true)
         return config
     }
 )
 
 request.interceptors.response.use((response) => {
-
     const timer = setTimeout(()=>{
         store.commit('setLoading', false)
         clearTimeout(timer)

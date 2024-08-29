@@ -5,7 +5,7 @@ import {useRoute, useRouter} from "vue-router";
 import store from "@/store";
 const route = useRoute()
 const router = useRouter()
-import {formatTime} from '@/util'
+import {formatTime} from '@/helper'
 import {computed, onBeforeMount} from "vue";
 import {Article} from "@/api/responseType";
 const id = route.params.id

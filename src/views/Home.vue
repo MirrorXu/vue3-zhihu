@@ -22,7 +22,7 @@ function handleCreateArticle() {
   router.push({name: 'createArticle'})
 }
 onBeforeMount(()=>{
-  store.dispatch('fetchColumnData' , {page: 1, size: 20}).then((res) => {
+  store.dispatch('fetchColumnData' , {page: 1, size: 20}).then(() => {
     console.log(store.state.columnData)
   })
 })

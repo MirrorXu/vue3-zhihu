@@ -52,7 +52,7 @@ function reset() {
 }
 
 const emits = defineEmits(['submit'])
-const handleSubmit = function (e: MouseEvent) {
+const handleSubmit = function () {
   const isValid = validate()
   emits('submit', {
     success: isValid,

@@ -43,8 +43,7 @@ function doExit() {
       :hide-on-click="false"
       @command="handleCommand"
   >
-    <!--        您好，{{ user.name }}-->
-    您好，{{ user.name }}
+    您好，{{ user.nickName }}
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item icon="DocumentAdd" command="a">创建文章</el-dropdown-item>

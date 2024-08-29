@@ -42,21 +42,20 @@ import {useStore} from "vuex";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
-import {User} from "@/api/responseType";
 
 const router = useRouter()
 const route = useRoute()
-
 console.log('router:', router)
 console.log('route:', route)
-type Type = 'login' | 'register'
-
-const formType: Type = (route.query.type as Type) || 'login'
+export type LoginType = 'login' | 'register'
+const formType: LoginType = (route.query.type as LoginType) || 'login'
 const isRegister = computed(() => formType === 'register')
+
+const redirect = route.query.redirect || '/'
 
 const form = reactive({
   email: {
-    value: 'xuxuee@163.com',
+    value: '111@test.com',
     label: '邮箱',
     placeholder: '请输入邮箱',
     type: 'email',
@@ -76,7 +75,7 @@ const form = reactive({
     ]
   },
   password: {
-    value: '123456',
+    value: '111111',
     label: "密码",
     type: 'password',
     placeholder: '请输入密码',
@@ -91,7 +90,7 @@ const form = reactive({
 
 
 // eslint-disable
-const refForm = ref<any>()
+const refForm = ref()
 
 // function handleSubmit(e) {
 //   console.log(e)
@@ -108,16 +107,23 @@ function doSubmit() {
     if (isRegister.value) {
       Object.assign(user, {nickName: form.nickName.value})
     }
-    if(isRegister.value){
-      return store.dispatch('register', user)
-    }else{
-      return store.dispatch('login', user)
+    if (isRegister.value) {
+      return store.dispatch('register', user).then(()=>{
+        console.log('注册成功，请登录')
+        let url = '/login?type=register'
+        if(redirect && redirect !== '/'){
+          url = `${url}&redirect=${redirect}`
+        }
+        router.replace(url)
+      })
+    } else {
+      return store.dispatch('loginAndFetchUerData', user).then(() => {
+        console.log('登录成功')
+        router.replace(redirect as string)
+      })
     }
-  }).then(res => {
-    console.log(res)
-    // store.commit('changeUser' , user)
-  }).catch(() => {
-    console.log('失败')
+  }).catch((err: unknown)=>{
+    console.log(err)
   })
 }
 

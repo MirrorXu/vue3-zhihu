@@ -1,11 +1,11 @@
 // 用户
 export interface User {
-    name: string,
-    gender: string,
-    isLogin: boolean,
+    _id: string,
     email: string,
-    // password: string,
-    [k: string]: unknown
+    nickName: string,
+    column: string,
+    description: string,
+    avatar: Image
 }
 
 
@@ -14,7 +14,7 @@ export interface _id {
 }
 
 export interface Image {
-    _id?:string
+    _id?: string
     url: string;
 }
 
@@ -30,14 +30,15 @@ export interface Column extends _id {
 export type ColumnList = Array<Column>
 
 export interface Article {
-    _id:string
-    author:string
+    _id: string
+    author: string
     title: string
-    column : string
-    createdAt:string
-    excerpt:string,
-    image ?:Image
+    column: string
+    createdAt: string
+    excerpt: string,
+    image?: Image
 }
+
 export type ArticleList = Array<Article>
 
 

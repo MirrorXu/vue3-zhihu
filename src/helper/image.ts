@@ -13,7 +13,7 @@ export const createImage = (num ?: number | undefined ):ImageResult=> {
     if(typeof num === 'undefined')  num = 1
     if(num < 1)   num = 1
     if(num > imgList.length) num = imgList.length
-    const images = Array.from({length:num}).map((v, i) => {
+    const images = Array.from({length:num}).map(() => {
         return imgList[Math.floor(Math.random() * imgList.length)]
     })
     if(num === 1){

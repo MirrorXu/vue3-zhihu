@@ -1,14 +1,6 @@
 import {createStore} from 'vuex'
-import {AxiosResponse, isAxiosError} from "axios";
 import request from '@/api/request';
-import {User, Column, ColumnList, Article, Image} from "@/api/responseType";
-
-const user: User = {
-    name: '',
-    isLogin: false,
-    gender: '',
-    email: ''
-}
+import {User, Column, ColumnList, Article, ArticleList} from "@/api/responseType";
 
 interface ColumnData {
     list: ColumnList,
@@ -17,45 +9,69 @@ interface ColumnData {
     count: number,
 }
 
-const columnData: ColumnData = {
-    page: 0,
-    pageSize: 20,
-    list: [],
-    count: 0,
+export interface StoreProps {
+    loading: boolean
+    user: User
+    token: string,
+    articleForm: Article
+    columnData: ColumnData
+    columnArticles: ArticleList
+    columnDetail: Column
 }
 
-const articles: Array<Article> = []
-const column: Column = {
-    _id: '',
-    title: '',
-    avatar: {_id: '', url: ''},
-    author: '',
-    createdAt: '',
-    description: '',
-}
-const articleForm: Article = {
-    _id: '',
-    author: '',
-    title: '',
-    column: '',
-    createdAt: '',
-    excerpt: ''
-}
-export default createStore({
+const token = localStorage.getItem("token") || ''
+export default createStore<StoreProps>({
     state: {
+        // 全局loading状态
         loading: false,
-        user,
-        articleForm,
-        columnData: columnData,
-        columnDetail: column,
-        columnArticles: articles,
+        // 用户令牌
+        token: token,
+        // 用户信息
+        user: {
+            _id: '',
+            email: '',
+            nickName: '',
+            column: '',
+            description: '',
+            avatar:{
+                _id:'',
+                url:''
+            }
+        },
+        articleForm: {
+            _id: '',
+            author: '',
+            title: '',
+            column: '',
+            createdAt: '',
+            excerpt: ''
+        },
+        columnData: {
+            page: 0,
+            pageSize: 20,
+            list: [],
+            count: 0,
+        },
+        columnDetail: {
+            _id: '',
+            title: '',
+            avatar: {_id: '', url: ''},
+            author: '',
+            createdAt: '',
+            description: '',
+        },
+        columnArticles: [],
     },
     getters: {
         isLogin(state) {
-            return state.user.isLogin
+            return state.user._id
         },
     },
     mutations: {
+        setToken(state, token) {
+            state.token = token
+            localStorage.setItem("token", token)
+        },
         setLoading(state, payload: boolean) {
             state.loading = payload
         },
@@ -79,27 +95,27 @@ export default createStore({
         }
     },
     actions: {
-        register({commit}, payload) {
-            return request.post('/users', payload).then(response => {
-                console.log(response)
-            })
+        async register( context, payload) {
+            console.log(context)
+            const res = await request.post('/users', payload)
+            return res
         },
-        login({commit, state}, form) {
-            return request.post('/user/login', form).then(
-                res => {
-                    console.log(res)
-                    debugger
-                    // commit('changeUser', form)
-                },
-                err => {
-                    debugger
-                    console.log(err)
-                    if (isAxiosError(err)) {
-                        return true
-                    } else {
-                        return Promise.reject(err)
-                    }
-                })
+        async login({commit}, loginData) {
+            const res = await request.post('/user/login', loginData)
+            const {data: {token}} = res
+            commit('setToken', token)
+            return token
+        },
+        async getCurrentUser({commit}) {
+            const ret = await request.get('/user/current')
+            const { data:user } = ret
+            commit('changeUser', user)
+            return user
+        },
+        async loginAndFetchUerData({dispatch}, loginData) {
+            const token = await dispatch('login' , loginData)
+            const user = await dispatch('getCurrentUser')
+            return  {token, user}
         },
         changeArticle({commit}, article) {
             commit('addArticle', article)

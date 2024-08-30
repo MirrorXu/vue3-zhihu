@@ -26,7 +26,7 @@ export const createMessage = (message: string, type: MessageType = 'default', du
     const timer: number = setTimeout(()=>{
         clearTimeout(timer)
         messageInstance.unmount()
-        console.log(wrapperDom)
+        // console.log(wrapperDom)
         if(document.getElementById(wrapperId)){
             document.body.removeChild(wrapperDom!)
         }

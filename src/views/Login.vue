@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 v-if="isRegister">注册</h1>
+    <h1 v-if="formType === 'register'">注册</h1>
     <h1 v-else>登录</h1>
     <div class="form">
       <MyForm ref="refForm">

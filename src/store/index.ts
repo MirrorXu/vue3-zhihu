@@ -1,7 +1,6 @@
 import {createStore} from 'vuex'
 import request from '@/api/request';
 import {User, Column, ColumnList, Article, ArticleList} from "@/api/responseType";
-import {ca} from "element-plus/es/locale";
 
 interface ColumnData {
     list: ColumnList,

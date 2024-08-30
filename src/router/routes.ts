@@ -38,6 +38,9 @@ const routes: Array<RouteRecordRaw> = [
                 name:'createArticle',
                 path:'create',
                 component:()=> import( /* webpackChunkName: "column" */'@/views/Article/Create.vue'),
+                meta:{
+                    requireLogin:true
+                }
             }
         ]
     },

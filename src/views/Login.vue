@@ -37,11 +37,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import {computed, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import {useStore} from "vuex";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
+import {isAxiosError} from "axios";
 
 const router = useRouter()
 const route = useRoute()
@@ -49,7 +50,7 @@ console.log('router:', router)
 console.log('route:', route)
 export type LoginType = 'login' | 'register'
 const formType: LoginType = (route.query.type as LoginType) || 'login'
-const isRegister = computed(() => formType === 'register')
+
 
 const redirect = route.query.redirect || '/'
 
@@ -75,7 +76,7 @@ const form = reactive({
     ]
   },
   password: {
-    value: '111111',
+    value: '1111112',
     label: "密码",
     type: 'password',
     placeholder: '请输入密码',
@@ -99,32 +100,45 @@ const refForm = ref()
 const store = useStore()
 
 function doSubmit() {
-  refForm.value.validate().then(() => {
-    const user = {
-      email: form.email.value,
-      password: form.password.value,
-    }
-    if (isRegister.value) {
-      Object.assign(user, {nickName: form.nickName.value})
-    }
-    if (isRegister.value) {
-      return store.dispatch('register', user).then(()=>{
-        console.log('注册成功，请登录')
-        let url = '/login?type=register'
-        if(redirect && redirect !== '/'){
-          url = `${url}&redirect=${redirect}`
+  refForm.value.validate().then(
+      () => {
+        const user = {
+          email: form.email.value,
+          password: form.password.value,
         }
-        router.replace(url)
-      })
-    } else {
-      return store.dispatch('loginAndFetchUerData', user).then(() => {
-        console.log('登录成功')
-        router.replace(redirect as string)
-      })
-    }
-  }).catch((err: unknown)=>{
-    console.log(err)
-  })
+        if (formType === 'register') {
+          Object.assign(user, {nickName: form.nickName.value})
+          return store.dispatch('register', user).then(() => {
+            console.log('注册成功，请登录')
+            let url = '/login?type=register'
+            if (redirect && redirect !== '/') {
+              url = `${url}&redirect=${redirect}`
+            }
+            router.replace(url)
+          })
+        } else if (formType === 'login') {
+          store.dispatch('loginAndFetchUerData', user).then(
+              () => {
+                console.log('登录成功')
+                router.replace(redirect as string)
+              },
+              err => {
+                console.log('loginAndFetchUerData error', err)
+                if (isAxiosError(err)) {
+                  const errorData = err?.response?.data
+                  if (errorData) {
+                    console.log(errorData.error)
+                  }
+                }
+              }
+          )
+        }
+      },
+      (err: unknown) => {
+        console.log()
+        console.log(err)
+      }
+  )
 }
 
 function doRest() {

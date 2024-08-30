@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // const p = new Promise((resolve, reject) => {
+    //     reject('xxx')
+    // })
+    //
+    // p.then((res)=>{
+    //     console.log(res)
+    // }).catch(err=>{
+    //     console.log('catch:' , err)
+    // })
+    // p.catch(err=>{
+    //     console.log('catch' , err)
+    // })
+
+    // interceptors
+    // then(
+    //     function disPatchRequest(res) {
+    //
+    //     },
+    //     undefined
+    // )
+    // const p = Promise.reject('err')
+    const p = Promise.resolve('ok')
+    // p.then(
+    //     function fulfilled1(res) {
+    //         debugger
+    //         console.log('log1:', res)
+    //         throw 'err'
+    //         // return Promise.reject('err')
+    //         // return res + 'log1'
+    //     },
+    //     function rejected1(err) {
+    //         console.log('log1Error:', err)
+    //         Promise.reject(err)
+    //         // return  Promise.reject(err)
+    //     }
+    // ).then(
+    //     function log2(res) {
+    //         debugger
+    //         console.log('log2:', res)
+    //         return res + 'log2'
+    //     },
+    //     function log2Error(err) {
+    //         debugger
+    //         console.log('log2Error:', err)
+    //     }
+    // )
+
+    // p.then((o)=>{
+    //     console.log(1)
+    //     Promise.reject(o)
+    // }).then((o)=>{
+    //     console.log(2 , o)
+    //     return o
+    // }).catch(err=>{
+    //     console.log('err' ,err)
+    // })
+
+    p.catch(e=>{
+        console.log(e)
+        return 'aaa'
+    }).then(p=>{
+        console.log(p)
+    }).catch(e=>{
+        console.log('catch', e)
+    })
+
+
+</script>
+</body>
+</html>

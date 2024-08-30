@@ -1,9 +1,10 @@
 <script setup lang="ts">
 
-import {PropType, defineProps, nextTick} from "vue";
-import {useRouter} from "vue-router";
+import {PropType, defineProps} from "vue";
+import {useRoute, useRouter} from "vue-router";
 import {User} from '@/api/responseType'
-
+import {useStore} from "vuex";
+const store = useStore()
 const router = useRouter();
 defineProps({
   user: {
@@ -20,13 +21,16 @@ function handleCommand(command: string) {
       break
   }
 }
-
+const currentRoute = useRoute()
 function doExit() {
   console.log(router)
-  nextTick(() => {
-    localStorage.setItem('isLogin', '')
-    router.push({name: 'login'})
-  })
+  localStorage.removeItem('token')
+  store.commit('setToken' , '')
+  if(currentRoute.name === 'home'){
+    window.location.reload()
+  }else{
+    router.push({name: 'home'})
+  }
 }
 </script>
 

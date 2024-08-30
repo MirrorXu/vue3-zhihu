@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import store from "@/store";
 // 接口校验参数
 const icode = 'C4E4FD16507DC7F5'
@@ -6,7 +6,10 @@ const request = axios.create({
     baseURL: "http://apis.imooc.com/api",
 })
 request.interceptors.request.use(
-    (config) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    function (config) {
+        console.log('##### 1')
         // get 请求，添加到url中
         if ((config.method as string).toLowerCase() === 'get') {
             config.params = config.params || {}
@@ -18,7 +21,7 @@ request.interceptors.request.use(
                 Object.assign(config.data, {icode})
             }
         }
-        if(store.state.token){
+        if (store.state.token) {
             config.headers.Authorization = `Bearer ${store.state.token}`
         }
         store.commit('setLoading', true)
@@ -27,15 +30,18 @@ request.interceptors.request.use(
 )
 
 request.interceptors.response.use((response) => {
-    const timer = setTimeout(()=>{
+    const timer = setTimeout(() => {
         store.commit('setLoading', false)
         clearTimeout(timer)
-    },1000)
+    }, 1000)
     if (response.status === 200 && response.data && response.data.code === 0) {
         return response.data
     } else {
         return Promise.reject(response)
     }
+}, (e)=>{
+    store.commit('setLoading', false)
+    return Promise.reject(e)
 })
 
 

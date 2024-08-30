@@ -1,12 +1,18 @@
 import {createStore} from 'vuex'
 import request from '@/api/request';
 import {User, Column, ColumnList, Article, ArticleList} from "@/api/responseType";
+import {ca} from "element-plus/es/locale";
 
 interface ColumnData {
     list: ColumnList,
     page: number,
     pageSize: number,
     count: number,
+}
+
+export type GlobalError = {
+    status: boolean,
+    message?: string,
 }
 
 export interface StoreProps {
@@ -16,7 +22,8 @@ export interface StoreProps {
     articleForm: Article
     columnData: ColumnData
     columnArticles: ArticleList
-    columnDetail: Column
+    columnDetail: Column,
+    error: GlobalError
 }
 
 const token = localStorage.getItem("token") || ''
@@ -33,11 +40,12 @@ export default createStore<StoreProps>({
             nickName: '',
             column: '',
             description: '',
-            avatar:{
-                _id:'',
-                url:''
+            avatar: {
+                _id: '',
+                url: ''
             }
         },
+        error: {status: false, message: ''},
         articleForm: {
             _id: '',
             author: '',
@@ -68,6 +76,9 @@ export default createStore<StoreProps>({
         },
     },
     mutations: {
+        setError(state, error) {
+            state.error = error
+        },
         setToken(state, token) {
             state.token = token
             localStorage.setItem("token", token)
@@ -95,7 +106,7 @@ export default createStore<StoreProps>({
         }
     },
     actions: {
-        async register( context, payload) {
+        async register(context, payload) {
             console.log(context)
             const res = await request.post('/users', payload)
             return res
@@ -108,14 +119,19 @@ export default createStore<StoreProps>({
         },
         async getCurrentUser({commit}) {
             const ret = await request.get('/user/current')
-            const { data:user } = ret
+            const {data: user} = ret
             commit('changeUser', user)
             return user
         },
+        // 登录并获取用户信息
         async loginAndFetchUerData({dispatch}, loginData) {
-            const token = await dispatch('login' , loginData)
-            const user = await dispatch('getCurrentUser')
-            return  {token, user}
+            try {
+                const token = await dispatch('login', loginData)
+                const user = await dispatch('getCurrentUser')
+                return {token, user}
+            } catch (err) {
+                return Promise.reject(err)
+            }
         },
         changeArticle({commit}, article) {
             commit('addArticle', article)

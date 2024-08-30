@@ -2,19 +2,20 @@
   <teleport to="#message">
     <div v-if="visible" class="message" :class="[(`message-${type}`)]">
       {{message}}
-      <el-icon @click.stop="handleClose"><Close /></el-icon>
+<!--      <el-icon @click.stop="handleClose"><Close /></el-icon>-->
+      <span @click="handleClose">x</span>
     </div>
   </teleport>
 
 </template>
 <script setup lang="ts">
-import {defineProps, PropType, ref, defineEmits, onMounted} from 'vue'
-export type MessageType = 'success' | 'warning' | 'error' | 'default'
+import {defineProps, PropType, ref, defineEmits, onMounted, onUnmounted} from 'vue'
+import {MessageType} from "@/components/Message/createMessage";
 
 const div = document.createElement('div')
 div.id = 'message'
 document.body.appendChild(div)
-onMounted(()=>{
+onUnmounted(()=>{
   document.body.removeChild(div)
 })
 const visible = ref(true)

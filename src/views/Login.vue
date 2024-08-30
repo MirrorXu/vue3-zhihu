@@ -43,6 +43,7 @@ import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
 import {isAxiosError} from "axios";
+import {createMessage} from "@/components/Message/createMessage";
 
 const router = useRouter()
 const route = useRoute()
@@ -128,6 +129,7 @@ function doSubmit() {
                   const errorData = err?.response?.data
                   if (errorData) {
                     console.log(errorData.error)
+                    createMessage(errorData.error , 'warning' , 2000)
                   }
                 }
               }

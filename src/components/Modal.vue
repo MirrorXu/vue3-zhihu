@@ -7,7 +7,6 @@ export default defineComponent({
   },
   emits: {
     // 'close':(payload:any)=>{
-    //   debugger
     //   return payload
     // }
   },

@@ -1,5 +1,6 @@
 <template>
   <div id="app" v-loading="loading">
+    <Message message="xxxxxxx" type="error" @close="handleClose"></Message>
     <router-view/>
   </div>
 </template>
@@ -7,8 +8,13 @@
 <script lang="ts">
 import {computed, defineComponent, watch} from "vue";
 import {useStore} from "vuex";
+import  Message  from "@/components/Message/Message.vue";
 
 export default defineComponent({
+  name:'App',
+  components:{
+    Message:Message
+  },
   setup(props, context) {
     console.log(props, context)
     const store = useStore()
@@ -23,6 +29,11 @@ export default defineComponent({
     }
     return {
       loading
+    }
+  },
+  methods:{
+    handleClose(){
+      console.log('message com close')
     }
   }
 })

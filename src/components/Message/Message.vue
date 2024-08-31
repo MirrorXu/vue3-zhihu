@@ -40,6 +40,7 @@ function handleClose() {
 <style scoped lang="scss">
 .message{
   position: fixed;
+  z-index: 10000;
   height: 30px;
   width: 200px;
   top:10px;

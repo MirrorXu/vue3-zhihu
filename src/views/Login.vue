@@ -37,7 +37,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive, ref ,watch} from "vue";
 import {useStore} from "vuex";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
@@ -50,14 +50,16 @@ const route = useRoute()
 console.log('router:', router)
 console.log('route:', route)
 export type LoginType = 'login' | 'register'
-const formType: LoginType = (route.query.type as LoginType) || 'login'
 
-
-const redirect = route.query.redirect || '/'
+const type = (route.query.type as LoginType) || 'login'
+const formType = ref<string>(type)
+watch(()=> route.query.type , (newVal)=>{
+  formType.value = newVal as string
+})
 
 const form = reactive({
   email: {
-    value: '111@test.com',
+    value: 'mirror@test.com',
     label: '邮箱',
     placeholder: '请输入邮箱',
     type: 'email',
@@ -77,7 +79,7 @@ const form = reactive({
     ]
   },
   password: {
-    value: '1111112',
+    value: '111111',
     label: "密码",
     type: 'password',
     placeholder: '请输入密码',
@@ -107,21 +109,29 @@ function doSubmit() {
           email: form.email.value,
           password: form.password.value,
         }
-        if (formType === 'register') {
+        if (formType.value === 'register') {
           Object.assign(user, {nickName: form.nickName.value})
-          return store.dispatch('register', user).then(() => {
-            console.log('注册成功，请登录')
-            let url = '/login?type=register'
-            if (redirect && redirect !== '/') {
-              url = `${url}&redirect=${redirect}`
-            }
-            router.replace(url)
-          })
-        } else if (formType === 'login') {
+          return store.dispatch('register', user).then(
+              () => {
+                console.log('注册成功，请登录')
+                let url = '/login?type=login'
+                createMessage('注册成功,请登录' ,'success')
+                setTimeout(()=>{
+                  router.replace(url)
+                },1000)
+              },
+              function (err){
+                const {data} = err.response
+                const {error: message} = data
+                createMessage(message || '注册失败' , 'error' )
+              }
+          )
+        } else if (formType.value=== 'login') {
           store.dispatch('loginAndFetchUerData', user).then(
               () => {
                 console.log('登录成功')
-                router.replace(redirect as string)
+                const redirect = localStorage.getItem('login_redirect') || '/'
+                router.replace(redirect)
               },
               err => {
                 console.log('loginAndFetchUerData error', err)
@@ -129,7 +139,7 @@ function doSubmit() {
                   const errorData = err?.response?.data
                   if (errorData) {
                     console.log(errorData.error)
-                    createMessage(errorData.error , 'warning' , 2000)
+                    createMessage(errorData.error, 'warning', 2000)
                   }
                 }
               }

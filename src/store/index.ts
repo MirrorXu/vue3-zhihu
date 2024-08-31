@@ -25,6 +25,17 @@ export interface StoreProps {
     error: GlobalError
 }
 
+const initUser = ():User => JSON.parse(JSON.stringify({
+    _id: '',
+    email: '',
+    nickName: '',
+    column: '',
+    description: '',
+    avatar: {
+        _id: '',
+        url: ''
+    }
+}))
 const token = localStorage.getItem("token") || ''
 export default createStore<StoreProps>({
     state: {
@@ -33,17 +44,7 @@ export default createStore<StoreProps>({
         // 用户令牌
         token: token,
         // 用户信息
-        user: {
-            _id: '',
-            email: '',
-            nickName: '',
-            column: '',
-            description: '',
-            avatar: {
-                _id: '',
-                url: ''
-            }
-        },
+        user: initUser(),
         error: {status: false, message: ''},
         articleForm: {
             _id: '',
@@ -105,6 +106,11 @@ export default createStore<StoreProps>({
         }
     },
     actions: {
+        async logout({commit}) {
+            localStorage.removeItem('token')
+            commit("setToken", '')
+            commit("changeUser", initUser())
+        },
         async register(context, payload) {
             console.log(context)
             const res = await request.post('/users', payload)

@@ -1,4 +1,5 @@
 import {RouteRecordRaw} from 'vue-router'
+
 const routes: Array<RouteRecordRaw> = [
     // demo
     // {
@@ -12,34 +13,38 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'home',
-        component:()=> import(/* webpackChunkName: "about" */'@/views/Home.vue'),
-        meta:{
-
-        }
+        component: () => import(/* webpackChunkName: "about" */'@/views/Home.vue'),
+        meta: {}
     },
     {
         path: '/login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+        beforeEnter: (to, from) => {
+            if (from.name !== 'login' && from?.fullPath) {
+                localStorage.setItem('login_redirect', from.fullPath)
+            }
+            return true
+        }
     },
     {
         path: '/column/:id',
         name: 'column',
         component: () => import(/* webpackChunkName: "column" */ '../views/Column.vue'),
-        meta:{
-            title:'专栏',
+        meta: {
+            title: '专栏',
         }
     },
     {
-        name:"article",
-        path:'/article',
-        children:[
+        name: "article",
+        path: '/article',
+        children: [
             {
-                name:'createArticle',
-                path:'create',
-                component:()=> import( /* webpackChunkName: "column" */'@/views/Article/Create.vue'),
-                meta:{
-                    requireLogin:true
+                name: 'createArticle',
+                path: 'create',
+                component: () => import( /* webpackChunkName: "column" */'@/views/Article/Create.vue'),
+                meta: {
+                    requireLogin: true
                 }
             }
         ]

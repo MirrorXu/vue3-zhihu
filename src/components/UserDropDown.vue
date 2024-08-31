@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 import {PropType, defineProps} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {User} from '@/api/responseType'
 import {useStore} from "vuex";
+import {createMessage} from '@/components/Message/createMessage'
 const store = useStore()
-const router = useRouter();
 defineProps({
   user: {
     type: Object as PropType<User>,
@@ -23,14 +23,9 @@ function handleCommand(command: string) {
 }
 const currentRoute = useRoute()
 function doExit() {
-  console.log(router)
-  localStorage.removeItem('token')
-  store.commit('setToken' , '')
-  if(currentRoute.name === 'home'){
-    window.location.reload()
-  }else{
-    router.push({name: 'home'})
-  }
+  store.dispatch('logout').then(()=>{
+    createMessage('退出登录成功')
+  })
 }
 </script>
 

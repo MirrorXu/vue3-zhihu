@@ -21,7 +21,6 @@ function handleCommand(command: string) {
       break
   }
 }
-const currentRoute = useRoute()
 function doExit() {
   store.dispatch('logout').then(()=>{
     createMessage('退出登录成功')

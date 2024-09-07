@@ -1,7 +1,6 @@
 import {createApp , h} from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
 const vnode  = h('div' , {class: 'box'}, 'hello ')
 console.log(vnode)
 import App from './App.vue'
@@ -20,4 +19,3 @@ app.use(ElementPlus)
 app.use(store)
 app.use(router)
 app.mount('#app')
-

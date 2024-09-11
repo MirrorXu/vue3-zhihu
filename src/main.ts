@@ -8,10 +8,7 @@ import router from './router'
 import store from './store'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const app = createApp(App)
-// console.log(ElementPlusIconsVue)
-// console.log(Object.keys(ElementPlusIconsVue))
 const icons = Object.entries(ElementPlusIconsVue)
-// console.log(icons)
 for (const [key, component] of icons) {
     app.component(key, component)
 }

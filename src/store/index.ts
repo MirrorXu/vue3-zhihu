@@ -37,6 +37,7 @@ const initUser = ():User => JSON.parse(JSON.stringify({
     }
 }))
 const token = localStorage.getItem("token") || ''
+
 export default createStore<StoreProps>({
     state: {
         // 全局loading状态

@@ -5,6 +5,7 @@ import {useRoute} from "vue-router";
 import {User} from '@/api/responseType'
 import {useStore} from "vuex";
 import {createMessage} from '@/components/Message/createMessage'
+import router from "@/router";
 const store = useStore()
 defineProps({
   user: {
@@ -24,6 +25,9 @@ function handleCommand(command: string) {
 function doExit() {
   store.dispatch('logout').then(()=>{
     createMessage('退出登录成功')
+    setTimeout(()=>{
+      router.replace('/')
+    })
   })
 }
 </script>

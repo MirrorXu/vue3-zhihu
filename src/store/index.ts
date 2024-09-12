@@ -73,7 +73,7 @@ export default createStore<StoreProps>({
     },
     getters: {
         isLogin(state) {
-            return state.user._id
+            return !!state.user._id
         },
     },
     mutations: {

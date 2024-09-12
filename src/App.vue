@@ -19,11 +19,11 @@ export default defineComponent({
     watch(loading, (newVal, oldVal) => {
       console.log('loading:', newVal, oldVal)
     })
-    if(store.state.token){
-      store.dispatch('getCurrentUser').then(res=>{
-        console.log(res)
-      })
-    }
+    // if(store.state.token){
+    //   store.dispatch('getCurrentUser').then(res=>{
+    //     console.log(res)
+    //   })
+    // }
     return {
       loading
     }

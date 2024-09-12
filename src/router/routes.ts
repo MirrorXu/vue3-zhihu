@@ -20,12 +20,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/login',
         name: 'login',
         component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
-        beforeEnter: (to, from) => {
-            if (from.name !== 'login' && from?.fullPath) {
-                localStorage.setItem('login_redirect', from.fullPath)
-            }
-            return true
-        }
     },
     {
         path: '/column/:id',

@@ -31,23 +31,34 @@
         <span style="display: none"></span>
       </template>
     </MyForm>
+    <EasyEditor ref="easyEditorRef" v-model="form.content.value" :options="editorOptions"></EasyEditor>
     <div>
-      <el-button type="primary" @click="doSubmit">提交</el-button>
+
+    </div>
+    <div style="height: 100px ; display: flex; align-items: center;justify-content: center;">
+      <el-button-group>
+        <el-button  type="primary" @click.stop="addCommonFlag">追加公共标识</el-button>
+        <el-button  type="primary" @click.stop="clearInput">清空编辑器内容</el-button>
+        <el-button  type="primary" @click="doSubmit">提交文章</el-button>
+      </el-button-group>
     </div>
   </layout>
 </template>
 <script setup lang="ts">
 import Layout from "@/components/Layout/Layout.vue";
+import {Options} from "easymde";
+import EasyEditor from '@/components/EasyEditor/EasyEditor.vue'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import MyInput, {RuleItem} from "@/components/Form/MyInput.vue";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import store from "@/store";
 import {selectFiles} from '@/helper/file'
 import {upload, creatArticle, CreateArticleForm} from '@/api/api'
 import {Image} from "@/api/responseType";
 import router from "@/router";
 
+const editorOptions: Options = reactive<Options>({spellChecker: false})
 const commonRules: Array<RuleItem> = [
   {type: 'required', message: '不能为空'}
 ]
@@ -57,17 +68,13 @@ const form = reactive({
     rules: commonRules,
     placeholder: '请输入标题'
   },
-  // description: {
-  //   value: '',
-  //   placeholder: '请输入摘要',
-  //   rules: commonRules,
-  // },
   content: {
-    value: '',
+    value: 'fadsfafs',
     rules: commonRules,
     placeholder: '请输入内容'
   },
 })
+const aaa = ref('')
 const headerImage = reactive<Image>({url: '', _id: ""})
 const handleUpload = () => {
   selectFiles({accept: 'image/*', multiple: false}).then((files) => {
@@ -77,7 +84,6 @@ const handleUpload = () => {
     }
     const file: File = files[0]
     const limitSize = 2
-
     console.log('当前文件体积（MB）', file.size / (1024 * 1024))
     if (file.size > limitSize * 1024 * 1024) {
       throw new Error(`文件体积不能大于${limitSize}M`)
@@ -115,13 +121,13 @@ const doSubmit = () => {
   formCom.validate().then(() => {
     const articleData = getFormData()
     return creatArticle(articleData).then(res => {
-      console.log('文章创建成功',res)
+      console.log('文章创建成功', res)
 
       const {column} = res.data
-      const timer= setTimeout(()=>{
+      const timer = setTimeout(() => {
         clearTimeout(timer)
-        router.push({name: 'column', params: {id:column}})
-      },200)
+        router.push({name: 'column', params: {id: column}})
+      }, 200)
 
     })
   }).catch(() => {
@@ -129,6 +135,22 @@ const doSubmit = () => {
   })
 }
 
+
+// 测试 EasyEditor 方法
+const easyEditorRef = ref(null)
+let easyEditor: { clear(): void, append(str: string): void } | null = null
+const addCommonFlag = () => {
+  if (easyEditor) {
+    easyEditor.append(`\n------------ 祖国繁荣昌盛 -----------`)
+  }
+}
+const clearInput = () => {
+  easyEditor && easyEditor.clear()
+}
+onMounted(() => {
+  easyEditor = easyEditorRef.value
+
+})
 </script>
 
 <style scoped lang="scss">

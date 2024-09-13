@@ -16,15 +16,19 @@ defineProps({
 function handleCommand(command: string) {
   console.log(command)
   switch (command) {
+    case 'a':
+      router.push({name: 'createArticle'})
+      break
     case 'c':
       doExit()
       break
   }
 }
+
 function doExit() {
-  store.dispatch('logout').then(()=>{
+  store.dispatch('logout').then(() => {
     createMessage('退出登录成功')
-    setTimeout(()=>{
+    setTimeout(() => {
       router.replace('/')
     })
   })

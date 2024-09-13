@@ -8,19 +8,19 @@
     </slot>
     <input
         v-if="tag === 'input'"
-        :class="['input' , inputRef.error ? 'input-error' :'']"
-        :value="inputRef.val"
+        :class="['input' , fieldInfo.error ? 'input-error' :'']"
+        :value="modelValue"
         @input="handleInput"
         v-bind="$attrs"
     >
     <textarea
         v-else-if="tag === 'textarea'"
-        :class="['input' , inputRef.error ? 'input-error' :'']"
-        :value="inputRef.val"
+        :class="['input' , fieldInfo.error ? 'input-error' :'']"
+        :value="modelValue"
         @input="handleInput"
         v-bind="$attrs"
     ></textarea>
-    <span v-if="inputRef.error" class="error-tip">{{ inputRef.message }}</span>
+    <span v-if="fieldInfo.error" class="error-tip">{{ fieldInfo.message }}</span>
   </div>
 </template>
 <script setup lang="ts">
@@ -28,8 +28,7 @@ import {PropType, reactive, defineProps, defineEmits, useAttrs, warn, onUnmounte
 import {email as emailReg, password as passwordReg} from "@/helper/reg";
 import bus from "@/components/Form/bus";
 
-interface FieldType {
-  val: string,
+interface FieldInfo {
   error: boolean,
   message: string
 }
@@ -43,7 +42,7 @@ interface MinMax {
 }
 
 export interface RuleItem {
-  type: RuleType,
+  type: RuleType | RegExp,
   message?: string,
   min?: MinMax | number,
   max?: MinMax | number,
@@ -75,8 +74,7 @@ const props = defineProps({
   },
   // placeholder: String // 将组件的$attrs绑定到input
 })
-const inputRef = reactive<FieldType>({
-  val: props.modelValue,
+const fieldInfo = reactive<FieldInfo>({
   error: false,
   message: ''
 })
@@ -84,13 +82,12 @@ const emit = defineEmits(['update:modelValue'])
 
 function handleInput(e: Event) {
   const currentValue = (e.target as HTMLInputElement).value
-  inputRef.val = currentValue
   emit('update:modelValue', currentValue)
 }
 
-function validateByRange(rule: RuleItem, ref: FieldType) {
+function validateByRange(rule: RuleItem, ref: FieldInfo) {
   const {min, max} = rule
-  const val: string = ref.val
+  const val: string = props.modelValue
   let passed = true
   if (typeof min !== 'number' && typeof max === 'number' && typeof min !== 'object' && typeof max !== 'object') {
     warn('range validation failed', rule)
@@ -121,22 +118,22 @@ function validate() {
   if (props.rules && props.rules.length > 0) {
     allPassed = props.rules.every(rule => {
       let passed = true
-      inputRef.message = rule.message || ''
+      fieldInfo.message = rule.message || ''
       if (rule.type instanceof RegExp) {
-        passed = rule.type.test(inputRef.val)
+        passed = rule.type.test(props.modelValue)
       } else {
         switch (rule.type) {
           case "required":
-            passed = inputRef.val.trim() !== ''
+            passed = props.modelValue.trim() !== ''
             break
           case 'email':
-            passed = emailReg.test(inputRef.val)
+            passed = emailReg.test(props.modelValue)
             break
           case "password":
-            passed = passwordReg.test(inputRef.val)
+            passed = passwordReg.test(props.modelValue)
             break
           case "range":
-            passed = validateByRange(rule, inputRef)
+            passed = validateByRange(rule, fieldInfo)
             break
         }
       }
@@ -144,17 +141,16 @@ function validate() {
       return passed
     })
   }
-  inputRef.error = !allPassed
+  fieldInfo.error = !allPassed
   if (allPassed) {
-    inputRef.message = ''
+    fieldInfo.message = ''
   }
   return allPassed
 }
 
 function reset(){
-  inputRef.val = ''
-  inputRef.error = false
-  inputRef.message = ''
+  fieldInfo.error = false
+  fieldInfo.message = ''
 }
 bus.emit('validator', validate)
 bus.emit('resetor', reset)

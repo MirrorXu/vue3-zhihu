@@ -1,5 +1,6 @@
 import {createApp , h} from 'vue'
 import ElementPlus from 'element-plus'
+import '../node_modules/easymde/dist/easymde.min.css'
 import 'element-plus/dist/index.css'
 const vnode  = h('div' , {class: 'box'}, 'hello ')
 console.log(vnode)

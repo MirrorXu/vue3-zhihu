@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import {PropType, defineProps} from "vue";
-import {useRoute} from "vue-router";
 import {User} from '@/api/responseType'
 import {useStore} from "vuex";
 import {createMessage} from '@/components/Message/createMessage'

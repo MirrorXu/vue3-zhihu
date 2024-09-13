@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot></slot>
-    <div class="btns">
+    <div class="btns" v-if="showBtns">
       <slot name="submit">
         <el-button type="primary" @click="handleSubmit">submit</el-button>
       </slot>
@@ -16,9 +16,12 @@
 import {defineEmits, defineProps, defineExpose, onUnmounted} from 'vue'
 import bus from './bus'
 
-// const props = defineProps({
-//   modelValue
-// })
+defineProps({
+  showBtns:{
+    type:Boolean,
+    default:false
+  }
+})
 
 interface ValidateFn {
   (): boolean
@@ -62,7 +65,7 @@ const handleSubmit = function () {
 
 defineExpose({
   validate() {
-    return new Promise((resolve ,reject)=> {
+    return new Promise((resolve, reject) => {
       validate() ? resolve(true) : reject(false)
     })
   },
@@ -72,7 +75,7 @@ defineExpose({
       resolve({success: isValid})
     })
   },
-  reset(){
+  reset() {
     reset()
   }
 })

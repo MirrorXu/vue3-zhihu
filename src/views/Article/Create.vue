@@ -7,55 +7,52 @@
         </template>
       </SiteTitle>
     </template>
-    <div class="">
-      <uploader accept="image/jpg" @upload-success="uploadSuccess"></uploader>
-      <ul>
-        <li v-for="(res , i) in uploaded.resArr" :key="i">
-          <img style="width: 80px;height: 80px;" :src="res?.data?.url" alt="">
-          {{ res?.data?.url }}
-        </li>
-      </ul>
-    </div>
+
     <MyForm ref="formRef">
+      <div class="uploader" @click="handleUpload" :style="{backgroundImage:`url(${headerImage.url})`}">
+        <p>点击上传文章头图</p>
+      </div>
       <my-input
           label="标题"
           v-model="form.title.value"
           :rules="form.title.rules"
           :placeholder="form.title.placeholder"
       />
-      <my-input
-          label="摘要"
-          v-model="form.description.value"
-          :rules="form.description.rules"
-          placeholder="请输入摘要"
-      />
+      <!--      <my-input-->
+      <!--          label="摘要"-->
+      <!--          v-model="form.description.value"-->
+      <!--          :rules="form.description.rules"-->
+      <!--          placeholder="请输入摘要"-->
+      <!--      />-->
       <my-input
           tag="textarea"
           label="内容"
-          v-model="form.description.value"
+          v-model="form.content.value"
           type="text"
           rows="10"
           placeholder="请输入文章内容"
-          :rules="form.title.rules"
+          :rules="form.content.rules"
       />
-      <template #submit>
-        <el-button type="primary" @click="doSubmit">提交</el-button>
-      </template>
       <template #reset>
         <span style="display: none"></span>
       </template>
     </MyForm>
+    <div>
+      <el-button type="primary" @click="doSubmit">提交</el-button>
+    </div>
   </layout>
 </template>
 <script setup lang="ts">
 import Layout from "@/components/Layout/Layout.vue";
-import uploader from "@/components/Upload/Upload.vue";
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import MyInput, {RuleItem} from "@/components/Form/MyInput.vue";
 import {reactive, ref} from "vue";
-import {useStore} from "vuex";
-import {download} from "@/helper/file";
+import store from "@/store";
+import {selectFiles} from '@/helper/file'
+import {upload, creatArticle, CreateArticleForm} from '@/api/api'
+import {Image} from "@/api/responseType";
+import router from "@/router";
 
 const commonRules: Array<RuleItem> = [
   {type: 'required', message: '不能为空'}
@@ -66,63 +63,91 @@ const form = reactive({
     rules: commonRules,
     placeholder: '请输入标题'
   },
-  description: {
-    value: '',
-    placeholder: '请输入摘要',
-    rules: commonRules,
-  },
+  // description: {
+  //   value: '',
+  //   placeholder: '请输入摘要',
+  //   rules: commonRules,
+  // },
   content: {
     value: '',
     rules: commonRules,
     placeholder: '请输入内容'
-  }
+  },
 })
-const getFormData = () => {
-  return {
-    title: form.title.value,
-    description: form.description.value,
-    content: form.content.value,
-    time: Date.now(),
-    avatar: '',
-  }
+const headerImage = reactive<Image>({url: '', _id: ""})
+const handleUpload = () => {
+  selectFiles({accept: 'image/*', multiple: false}).then((files) => {
+    console.log(files)
+    if (files.length === 0) {
+      alert('未选择任何文件')
+    }
+    const file: File = files[0]
+    const limitSize = 2
+
+    console.log('当前文件体积（MB）', file.size / (1024 * 1024))
+    if (file.size > limitSize * 1024 * 1024) {
+      throw new Error(`文件体积不能大于${limitSize}M`)
+    }
+    return file
+  }).then((file) => {
+    const formData = new FormData()
+    formData.append(file.name || 'file', file);
+    return upload(formData)
+  }).then(res => {
+    console.log(res)
+    const {_id, url} = res.data
+    Object.assign(headerImage, {_id, url})
+  }).catch(err => {
+    console.log(err)
+    const message = err.message || '上传失败'
+    alert(message)
+  })
 }
-const submitFormData = () => {
-  const store = useStore()
-  store.dispatch('createArticle', getFormData())
+const getFormData = () => {
+  const data: CreateArticleForm = {
+    title: form.title.value,
+    content: form.content.value,
+    author: store.state.user._id,
+    column: store.state.user.column
+  }
+  if (headerImage._id) {
+    data.image = headerImage._id || ''
+  }
+  return data
 }
 const formRef = ref('')
 const doSubmit = () => {
   const formCom = formRef.value
-  console.log(formCom)
   formCom.validate().then(() => {
-    submitFormData()
+    const articleData = getFormData()
+    return creatArticle(articleData).then(res => {
+      console.log('文章创建成功',res)
+
+      const {column} = res.data
+      const timer= setTimeout(()=>{
+        clearTimeout(timer)
+        router.push({name: 'column', params: {id:column}})
+      },200)
+
+    })
   }).catch(() => {
     console.log('检验失败')
   })
 }
 
-interface Res {
-  data: {
-    url: string
-  }
-}
-let uploaded = reactive<{ resArr: Res[] }>({resArr: []})
-
-function uploadSuccess(resArr: Res[]) {
-  if (Array.isArray(resArr)) {
-    uploaded.resArr = resArr
-  }
-}
-
-function doDownload() {
-  const  url = 'http://typescript-vue.oss-cn-beijing.aliyuncs.com/vue-marker/66dffcf2b558154f03934285.jpg'
-  if(url){
-    const href  = url as string
-    download(href , 'a.jpg')
-  }
-}
 </script>
 
 <style scoped lang="scss">
-
+.uploader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  border: 1px dotted #999;
+  color: #888;
+  user-select: none;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 </style>

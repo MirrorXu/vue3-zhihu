@@ -9,7 +9,7 @@
 
 </template>
 <script setup lang="ts">
-import {defineProps, PropType, ref, defineEmits, onMounted, onUnmounted} from 'vue'
+import {defineProps, PropType, ref, defineEmits, onUnmounted} from 'vue'
 import {MessageType} from "@/components/Message/createMessage";
 
 const div = document.createElement('div')
@@ -20,7 +20,7 @@ onUnmounted(()=>{
 })
 const visible = ref(true)
 
-const props = defineProps({
+defineProps({
   message: String,
   type: {
     type: String as PropType<MessageType>,

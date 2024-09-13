@@ -2,7 +2,7 @@
 type MIMEType =
     "text/plain" |
     "text/html" |
-    "application/json" | 'image/jpg' | 'image/jpeg' | 'image/png';
+    "application/json" | 'image/jpg' | 'image/jpeg' | 'image/png' | 'image/*';
 
 interface Options {
     multiple?: boolean

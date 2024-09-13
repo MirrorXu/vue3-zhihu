@@ -18,7 +18,7 @@ onBeforeMount(()=>{
 const columnDetail = computed(()=> store.state.columnDetail)
 const columnArticles = computed(()=> store.state.columnArticles)
 function handleClick(article:Article) {
-  router.push({name: 'createArticle', params: {id: article._id}});
+  router.push({name: 'articleDetails', params: {id: article._id}});
 }
 
 </script>

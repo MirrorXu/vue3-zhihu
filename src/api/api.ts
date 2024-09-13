@@ -1,6 +1,6 @@
 import request from './request'
 import {AxiosResponse} from 'axios'
-import {Image} from "@/api/responseType";
+import {Article, Image} from "@/api/responseType";
 
 export const upload = (formData: FormData) => request.post<FormData, AxiosResponse<Image>>('/upload', formData, {
     headers: {
@@ -33,4 +33,9 @@ export interface RES_CreateArticle {
 }
 
 //创建文件
-export const creatArticle = (data:CreateArticleForm) => request.post<CreateArticleForm, AxiosResponse<RES_CreateArticle>>('/posts', data)
+export const creatArticle = (data: CreateArticleForm) => request.post<CreateArticleForm, AxiosResponse<RES_CreateArticle>>('/posts', data)
+// 文章 read
+export const fetchArticleDetails = (id: string) => request.get<string , AxiosResponse<RES_CreateArticle>>(`/posts/${id}`)
+
+// article delete
+export const deleteArticle = (id: string) => request.delete<string , AxiosResponse<RES_CreateArticle>>(`/posts/${id}`)

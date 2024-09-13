@@ -11,7 +11,7 @@ request.interceptors.request.use(
     function (config) {
         console.log('##### 1')
         // get 请求，添加到url中
-        if ((config.method as string).toLowerCase() === 'get') {
+        if ( ['get' , 'delete'].includes((config.method as string).toLowerCase() )) {
             config.params = config.params || {}
             Object.assign(config.params, {icode})
         } else { // 其他请求添加到data上
@@ -37,7 +37,7 @@ request.interceptors.response.use((response) => {
     if (response.status === 200 && response.data && response.data.code === 0) {
         return response.data
     } else {
-        return Promise.reject(response)
+        Promise.reject(response)
     }
 }, (e)=>{
     store.commit('setLoading', false)

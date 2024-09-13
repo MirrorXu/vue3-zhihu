@@ -43,7 +43,7 @@ interface MinMax {
 }
 
 export interface RuleItem {
-  type: RuleType | RegExp,
+  type: RuleType,
   message?: string,
   min?: MinMax | number,
   max?: MinMax | number,

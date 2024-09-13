@@ -26,13 +26,11 @@
             :rules="form.password.rules"
             v-model="form.password.value"
         ></MyInput>
-        <template #submit>
-          <el-button type="success" @click="doSubmit">提交</el-button>
-        </template>
-        <template #reset>
-          <el-button type="danger" @click="doRest">重置</el-button>
-        </template>
       </MyForm>
+      <div style="display: flex;align-content: center;justify-content: center">
+        <el-button type="success" @click="doSubmit">提交</el-button>
+        <el-button type="danger" @click="doRest">重置</el-button>
+      </div>
     </div>
   </div>
 </template>

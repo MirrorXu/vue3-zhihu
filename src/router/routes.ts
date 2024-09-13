@@ -40,6 +40,14 @@ const routes: Array<RouteRecordRaw> = [
                 meta: {
                     requireLogin: true
                 }
+            },
+            {
+                path: ':id',
+                name: 'articleDetails',
+                component: () => import( /* webpackChunkName: "column" */'@/views/Article/Details.vue'),
+                meta: {
+                    requireLogin: true
+                }
             }
         ]
     },

@@ -18,12 +18,6 @@
           :rules="form.title.rules"
           :placeholder="form.title.placeholder"
       />
-      <!--      <my-input-->
-      <!--          label="摘要"-->
-      <!--          v-model="form.description.value"-->
-      <!--          :rules="form.description.rules"-->
-      <!--          placeholder="请输入摘要"-->
-      <!--      />-->
       <my-input
           tag="textarea"
           label="内容"

@@ -7,6 +7,7 @@
 import {onMounted, ref, defineProps, defineEmits, onUnmounted, PropType , defineExpose} from "vue";
 import EasyMDE, {Options} from 'easymde'
 
+// 显式声明接受的 props
 const props = defineProps({
   modelValue: {
     type: String,
@@ -17,9 +18,14 @@ const props = defineProps({
     default: () => ({})
   }
 })
+// 显示的声明事件组件内的事件
 const emit = defineEmits(['update:modelValue', 'change' , 'blur'])
+// 组件实例
 const editorRef = ref<HTMLTextAreaElement | null>(null)
+// 编辑器实例
 let editor: EasyMDE | null = null;
+
+// 添加组件挂载后的狗子
 onMounted(() => {
   if (editorRef.value) {
     const editorConfig: Options = {
@@ -32,7 +38,6 @@ onMounted(() => {
 
     editor.codemirror.on('change', () => {
       if (editor) {
-        console.log('editor change:', editor.value())
         const currentValue = editor.value()
         emit('update:modelValue', currentValue)
         emit('change', currentValue)
@@ -44,10 +49,7 @@ onMounted(() => {
         emit('blur')
       }
     })
-
-
   }
-
 })
 onUnmounted(() => {
   editor && editor.cleanup()
@@ -76,14 +78,11 @@ defineExpose({
 <style scoped lang="scss">
 .editor-container {
   display: flex;
+  justify-content: stretch;
   width: 100%;
-  border: 1px solid deeppink;
-
-  .textarea {
-    display: block;
+  //border: 1px solid deeppink;
+  ::v-deep .EasyMDEContainer{
     width: 100% !important;
-    border: 1px solid red;
   }
-
 }
 </style>

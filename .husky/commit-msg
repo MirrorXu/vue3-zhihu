@@ -1,4 +1,4 @@
-#! bash
+#! /bin/bash
 echo "# git hook: commit-msg , validate commit message"
 # Add commit message linting to commit-msg hook
 npx --no -- commitlint --edit "$1"

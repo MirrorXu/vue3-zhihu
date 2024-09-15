@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {onMounted, ref, defineProps, defineEmits, onUnmounted, PropType , defineExpose} from "vue";
+import {onMounted, ref, defineProps, defineEmits, onUnmounted, PropType, defineExpose, watch} from "vue";
 import EasyMDE, {Options} from 'easymde'
 
 // 显式声明接受的 props
@@ -24,7 +24,12 @@ const emit = defineEmits(['update:modelValue', 'change' , 'blur'])
 const editorRef = ref<HTMLTextAreaElement | null>(null)
 // 编辑器实例
 let editor: EasyMDE | null = null;
-
+//
+watch(()=> props.modelValue, (value) => {
+  if(editor && value !== editor.value()) {
+    editor.value(value)
+  }
+})
 // 添加组件挂载后的狗子
 onMounted(() => {
   if (editorRef.value) {

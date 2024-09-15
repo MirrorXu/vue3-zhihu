@@ -59,7 +59,7 @@ const click = (commond: ConfirmType) => {
   height: 100vh;
   background: rgba(0, 0, 0 , .75);
   display: flex;
-  align-content: center;
+  align-items: center;
   justify-content: center;
   top: 0;
   left: 0;

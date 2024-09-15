@@ -11,22 +11,28 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-    const {requireLogin} = to.meta
-    if (!requireLogin) return next()
 
     const token = localStorage.getItem('token')
+    const {requireLogin} = to.meta
     if (!token) {
-        localStorage.setItem('login_redirect', from.fullPath)
-        next({name: 'login'})
+        if (!requireLogin) {
+            next()
+        } else {
+            localStorage.setItem('login_redirect', from.fullPath)
+            next({name: 'login'})
+        }
     } else {
         store.dispatch('getCurrentUser').then(user => {
             console.log(user)
             next()
         }).catch(() => {
-            localStorage.setItem('login_redirect', from.fullPath)
-            next({name: 'login'})
+            if (!requireLogin) {
+                next()
+            } else {
+                localStorage.setItem('login_redirect', from.fullPath)
+                next({name: 'login'})
+            }
         })
-
     }
 })
 export default router

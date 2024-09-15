@@ -20,13 +20,24 @@
         @input="handleInput"
         v-bind="$attrs"
     ></textarea>
+    <Editor
+        v-else-if="tag === 'editor'"
+        :class="[ fieldInfo.error ? 'input-error' :'']"
+        :modelValue="modelValue"
+        v-bind="$attrs"
+        @update:modelValue="handleEditorUpdate"
+        :options="editorOptions"
+    ></Editor>
     <span v-if="fieldInfo.error" class="error-tip">{{ fieldInfo.message }}</span>
   </div>
 </template>
 <script setup lang="ts">
+import Editor from '@/components/EasyEditor/EasyEditor.vue'
+import {Options} from "easymde";
 import {PropType, reactive, defineProps, defineEmits, useAttrs, warn, onUnmounted} from "vue";
 import {email as emailReg, password as passwordReg} from "@/helper/reg";
 import bus from "@/components/Form/bus";
+
 
 interface FieldInfo {
   error: boolean,
@@ -47,11 +58,12 @@ export interface RuleItem {
   min?: MinMax | number,
   max?: MinMax | number,
 }
-export type InputType = 'input' | 'textarea'
+
+export type InputType = 'input' | 'textarea' | 'editor'
 const props = defineProps({
-  tag:{
-    type: String as  PropType<InputType>,
-    default:'input',
+  tag: {
+    type: String as PropType<InputType>,
+    default: 'input',
   },
   width: {
     type: Number,
@@ -72,6 +84,9 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  editorOptions: {
+    type: Object as PropType<Options>,
+  }
   // placeholder: String // 将组件的$attrs绑定到input
 })
 const fieldInfo = reactive<FieldInfo>({
@@ -83,6 +98,10 @@ const emit = defineEmits(['update:modelValue'])
 function handleInput(e: Event) {
   const currentValue = (e.target as HTMLInputElement).value
   emit('update:modelValue', currentValue)
+}
+
+const handleEditorUpdate = (value: string) => {
+  emit('update:modelValue', value)
 }
 
 function validateByRange(rule: RuleItem, ref: FieldInfo) {
@@ -148,7 +167,7 @@ function validate() {
   return allPassed
 }
 
-function reset(){
+function reset() {
   fieldInfo.error = false
   fieldInfo.message = ''
 }

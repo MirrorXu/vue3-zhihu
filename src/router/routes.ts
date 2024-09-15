@@ -34,21 +34,22 @@ const routes: Array<RouteRecordRaw> = [
         path: '/article',
         children: [
             {
-                path: 'create',
-                name: 'createArticle',
-                component: () => import( /* webpackChunkName: "column" */'@/views/Article/Create.vue'),
+                path: ':id',
+                name: 'articleDetails',
+                component: () => import( /* webpackChunkName: "article" */'@/views/Article/Details.vue'),
                 meta: {
                     requireLogin: true
                 }
             },
             {
-                path: ':id',
-                name: 'articleDetails',
-                component: () => import( /* webpackChunkName: "column" */'@/views/Article/Details.vue'),
+                path: 'create',
+                name: 'createArticle',
+                component: () => import( /* webpackChunkName: "article" */'@/views/Article/Create.vue'),
                 meta: {
                     requireLogin: true
                 }
-            }
+            },
+
         ]
     },
     {

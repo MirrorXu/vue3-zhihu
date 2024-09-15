@@ -15,6 +15,11 @@ export interface CreateArticleForm {
     column: string
     image?: string
 }
+export interface updateArticleForm {
+    image?: string
+    title: string
+    content: string
+}
 
 export interface RES_CreateArticle {
     title: string,
@@ -34,6 +39,9 @@ export interface RES_CreateArticle {
 
 //创建文件
 export const creatArticle = (data: CreateArticleForm) => request.post<CreateArticleForm, AxiosResponse<RES_CreateArticle>>('/posts', data)
+// 更新文章
+export const updateArticle = (articleId:string, data: updateArticleForm) => request.patch<CreateArticleForm, AxiosResponse<RES_CreateArticle>>(`/posts/${articleId}`, data )
+
 // 文章 read
 export const fetchArticleDetails = (id: string) => request.get<string , AxiosResponse<RES_CreateArticle>>(`/posts/${id}`)
 

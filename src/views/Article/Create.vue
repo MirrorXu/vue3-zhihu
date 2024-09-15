@@ -13,33 +13,27 @@
         <p>点击上传文章头图</p>
       </div>
       <my-input
-          label="标题"
+          label="文章标题"
           v-model="form.title.value"
           :rules="form.title.rules"
           :placeholder="form.title.placeholder"
       />
+      <!--      {{ 'form.content.value:' + form.content.value }}-->
       <my-input
-          tag="textarea"
-          label="内容"
+          tag="editor"
+          :editor-options="editorOptions"
+          label="文章内容"
           v-model="form.content.value"
-          type="text"
-          rows="10"
           placeholder="请输入文章内容"
           :rules="form.content.rules"
       />
-      <template #reset>
-        <span style="display: none"></span>
-      </template>
     </MyForm>
-    <EasyEditor ref="easyEditorRef" v-model="form.content.value" :options="editorOptions"></EasyEditor>
+    <!--    <EasyEditor ref="easyEditorRef" v-model="form.content.value" :options="editorOptions"></EasyEditor>-->
     <div>
-
     </div>
     <div style="height: 100px ; display: flex; align-items: center;justify-content: center;">
       <el-button-group>
-        <el-button  type="primary" @click.stop="addCommonFlag">追加公共标识</el-button>
-        <el-button  type="primary" @click.stop="clearInput">清空编辑器内容</el-button>
-        <el-button  type="primary" @click="doSubmit">提交文章</el-button>
+        <el-button type="primary" @click="doSubmit">提交文章</el-button>
       </el-button-group>
     </div>
   </layout>
@@ -47,20 +41,21 @@
 <script setup lang="ts">
 import Layout from "@/components/Layout/Layout.vue";
 import {Options} from "easymde";
-import EasyEditor from '@/components/EasyEditor/EasyEditor.vue'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import MyInput, {RuleItem} from "@/components/Form/MyInput.vue";
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, PropType, reactive, ref} from "vue";
 import store from "@/store";
 import {selectFiles} from '@/helper/file'
-import {upload, creatArticle, CreateArticleForm} from '@/api/api'
+import {upload, creatArticle, CreateArticleForm, fetchArticleDetails, updateArticle} from '@/api/api'
 import {Image} from "@/api/responseType";
 import router from "@/router";
+import {createMessage} from "@/components/Message/createMessage";
+import {useRoute} from "vue-router";
 
 const editorOptions: Options = reactive<Options>({spellChecker: false})
 const commonRules: Array<RuleItem> = [
-  {type: 'required', message: '不能为空'}
+  {type: 'required', message: '内容不能为空'}
 ]
 const form = reactive({
   title: {
@@ -69,13 +64,26 @@ const form = reactive({
     placeholder: '请输入标题'
   },
   content: {
-    value: 'fadsfafs',
+    value: '',
     rules: commonRules,
     placeholder: '请输入内容'
   },
 })
-const aaa = ref('')
 const headerImage = reactive<Image>({url: '', _id: ""})
+const route = useRoute()
+const {type, id} = route.query;
+const isUpdate = type === 'update' && id
+if (isUpdate) {
+  fetchArticleDetails(id as string).then(res => {
+    console.log('文章详情：', res)
+    const {title, content, image} = res?.data || {}
+    if (image && image.url , image._id) Object.assign(headerImage, image)
+    if (title) form.title.value = title
+    if (content) form.content.value = content
+  }).catch(err => {
+    createMessage('文章详情获取失败', 'error')
+  })
+}
 const handleUpload = () => {
   selectFiles({accept: 'image/*', multiple: false}).then((files) => {
     console.log(files)
@@ -115,42 +123,44 @@ const getFormData = () => {
   }
   return data
 }
-const formRef = ref('')
-const doSubmit = () => {
-  const formCom = formRef.value
-  formCom.validate().then(() => {
-    const articleData = getFormData()
-    return creatArticle(articleData).then(res => {
-      console.log('文章创建成功', res)
 
-      const {column} = res.data
-      const timer = setTimeout(() => {
-        clearTimeout(timer)
-        router.push({name: 'column', params: {id: column}})
-      }, 200)
-
-    })
-  }).catch(() => {
-    console.log('检验失败')
-  })
-}
-
-
-// 测试 EasyEditor 方法
-const easyEditorRef = ref(null)
-let easyEditor: { clear(): void, append(str: string): void } | null = null
-const addCommonFlag = () => {
-  if (easyEditor) {
-    easyEditor.append(`\n------------ 祖国繁荣昌盛 -----------`)
+interface VM {
+  validate: {
+    (): Promise<void>
   }
 }
-const clearInput = () => {
-  easyEditor && easyEditor.clear()
-}
-onMounted(() => {
-  easyEditor = easyEditorRef.value
 
-})
+const formRef = ref<VM | null>(null)
+
+const doSubmit = async () => {
+  const formCom = formRef.value as VM
+  try {
+    await formCom.validate()
+  } catch (err) {
+    console.error(err)
+    createMessage('表单检验失败', 'error')
+    return
+  }
+  createMessage('检验成功', 'success')
+  try {
+    const articleData = getFormData()
+    let res;
+    if (isUpdate) {
+      res = await updateArticle(id as string, {title:articleData.title , content:articleData.content , image:articleData.image})
+    } else {
+      res = await creatArticle(articleData)
+    }
+    createMessage(`${isUpdate?'更新':'创建'}成功` , 'success')
+    const {column} = res.data
+    const timer = setTimeout(() => {
+      clearTimeout(timer)
+      router.push({name: 'column', params: {id: column}})
+    }, 200)
+  } catch (err) {
+    console.log('失败' , err)
+    createMessage('提交失败')
+  }
+}
 </script>
 
 <style scoped lang="scss">

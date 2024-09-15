@@ -28,22 +28,19 @@ console.log(props)
 
 const visible = ref(props.show)
 
-enum ConfirmType {
-  confirm = 'confirm',
-  cancel = 'cancel',
-}
+type ConfirmType = 'confirm' | 'cancel'
 
 const emits = defineEmits(['confirm', 'cancel'])
-const click = (commond: ConfirmType) => {
+const click = (command: ConfirmType) => {
   visible.value = false
-  switch (commond) {
-    case  ConfirmType.confirm:
+  switch (command) {
+    case  'confirm':
       console.log('confirm')
-      emits(ConfirmType.confirm)
+      emits('confirm')
       break
-    case ConfirmType.cancel:
+    case 'cancel':
       console.log('cancel')
-      emits(ConfirmType.cancel)
+      emits('cancel')
       break
   }
 

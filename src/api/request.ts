@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from "axios";
+import axios from "axios";
 import store from "@/store";
 // 接口校验参数
 const icode = 'C4E4FD16507DC7F5'

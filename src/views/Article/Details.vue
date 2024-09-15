@@ -68,7 +68,7 @@ if (!id) {
   fetchArticleDetails(id as string).then(res => {
     console.log('文章详情：', res)
     Object.assign(article, res.data)
-  }).catch(err => {
+  }).catch(() => {
     createMessage('文章详情获取失败', 'error')
   })
 }

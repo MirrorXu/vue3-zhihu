@@ -44,7 +44,7 @@ import {Options} from "easymde";
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import MyInput, {RuleItem} from "@/components/Form/MyInput.vue";
-import {computed, onMounted, PropType, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 import store from "@/store";
 import {selectFiles} from '@/helper/file'
 import {upload, creatArticle, CreateArticleForm, fetchArticleDetails, updateArticle} from '@/api/api'
@@ -80,7 +80,7 @@ if (isUpdate) {
     if (image && image.url , image._id) Object.assign(headerImage, image)
     if (title) form.title.value = title
     if (content) form.content.value = content
-  }).catch(err => {
+  }).catch(() => {
     createMessage('文章详情获取失败', 'error')
   })
 }
@@ -146,18 +146,22 @@ const doSubmit = async () => {
     const articleData = getFormData()
     let res;
     if (isUpdate) {
-      res = await updateArticle(id as string, {title:articleData.title , content:articleData.content , image:articleData.image})
+      res = await updateArticle(id as string, {
+        title: articleData.title,
+        content: articleData.content,
+        image: articleData.image
+      })
     } else {
       res = await creatArticle(articleData)
     }
-    createMessage(`${isUpdate?'更新':'创建'}成功` , 'success')
+    createMessage(`${isUpdate ? '更新' : '创建'}成功`, 'success')
     const {column} = res.data
     const timer = setTimeout(() => {
       clearTimeout(timer)
       router.push({name: 'column', params: {id: column}})
     }, 200)
   } catch (err) {
-    console.log('失败' , err)
+    console.log('失败', err)
     createMessage('提交失败')
   }
 }

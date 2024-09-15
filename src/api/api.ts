@@ -1,6 +1,6 @@
 import request from './request'
 import {AxiosResponse} from 'axios'
-import {Article, Image} from "@/api/responseType";
+import {Image} from "@/api/responseType";
 
 export const upload = (formData: FormData) => request.post<FormData, AxiosResponse<Image>>('/upload', formData, {
     headers: {

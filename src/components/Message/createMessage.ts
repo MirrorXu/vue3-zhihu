@@ -28,7 +28,7 @@ export const createMessage = (message: string, type: MessageType = 'default', du
         messageInstance.unmount()
         // console.log(wrapperDom)
         if(document.getElementById(wrapperId)){
-            document.body.removeChild(wrapperDom!)
+            wrapperDom && document.body.removeChild(wrapperDom)
         }
     }, duration)
 }

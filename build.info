@@ -1,0 +1,133 @@
+
+> vue3-zhihu@0.1.0 build
+> vue-cli-service build
+
+All browser targets in the browserslist configuration have supported ES module.
+Therefore we don't build two separate bundles for differential loading.
+
+
+ WARNING  Compiled with 3 warnings3:43:00 PM
+
+[eslint] 
+/Users/xupenglai/Documents/vue3-zhihu/src/App.vue
+  16:5  warning  Unexpected console statement  no-console
+  20:7  warning  Unexpected console statement  no-console
+  33:7  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/api/request.ts
+  12:9  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/components/Form/MyInput.vue
+  181:1  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/components/Model/Model.vue
+  27:1  warning  Unexpected console statement  no-console
+  38:7  warning  Unexpected console statement  no-console
+  42:7  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/components/Upload/Upload.vue
+  19:5  warning  Unexpected console statement  no-console
+  32:7  warning  Unexpected console statement  no-console
+  37:9  warning  Unexpected console statement  no-console
+  51:9  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/components/UserDropDown.vue
+  17:3  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/main.ts
+  6:1  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/router/index.ts
+  26:13  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/store/index.ts
+  116:13  warning  Unexpected console statement  no-console
+  157:17  warning  Unexpected console statement  no-console
+  163:17  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/views/Article/Create.vue
+   78:5  warning  Unexpected console statement  no-console
+   89:5  warning  Unexpected console statement  no-console
+   95:5  warning  Unexpected console statement  no-console
+  105:5  warning  Unexpected console statement  no-console
+  109:5  warning  Unexpected console statement  no-console
+  140:5  warning  Unexpected console statement  no-console
+  164:5  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/views/Article/Details.vue
+  53:5  warning  Unexpected console statement  no-console
+  69:5  warning  Unexpected console statement  no-console
+  78:3  warning  Unexpected console statement  no-console
+  83:3  warning  Unexpected console statement  no-console
+  89:5  warning  Unexpected console statement  no-console
+  97:5  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/views/Column.vue
+  16:3  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/views/Home.vue
+  21:3  warning  Unexpected console statement  no-console
+  26:5  warning  Unexpected console statement  no-console
+
+/Users/xupenglai/Documents/vue3-zhihu/src/views/Login.vue
+   48:1   warning  Unexpected console statement  no-console
+   49:1   warning  Unexpected console statement  no-console
+  114:17  warning  Unexpected console statement  no-console
+  130:17  warning  Unexpected console statement  no-console
+  135:17  warning  Unexpected console statement  no-console
+  139:21  warning  Unexpected console statement  no-console
+  148:9   warning  Unexpected console statement  no-console
+  149:9   warning  Unexpected console statement  no-console
+
+✖ 42 problems (0 errors, 42 warnings)
+
+
+You may use special comments to disable some warnings.
+Use // eslint-disable-next-line to ignore the next line.
+Use /* eslint-disable */ to ignore all warnings in a file.
+ warning  
+
+asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  css/chunk-vendors.bd5f110b.css (326 KiB)
+  js/chunk-vendors.a464100c.js (1.16 MiB)
+  js/566.c79a36da.js (325 KiB)
+
+ warning  
+
+entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  app (1.49 MiB)
+      css/chunk-vendors.bd5f110b.css
+      js/chunk-vendors.a464100c.js
+      css/app.7e36afa8.css
+      js/app.27612368.js
+
+
+  File                                   Size              Gzipped
+
+  dist/js/chunk-vendors.a464100c.js      1184.65 KiB       351.23 KiB
+  dist/js/566.c79a36da.js                324.90 KiB        106.44 KiB
+  dist/js/article.38bf56ff.js            45.90 KiB         15.36 KiB
+  dist/js/app.27612368.js                10.60 KiB         4.04 KiB
+  dist/js/login.a70a3c05.js              5.58 KiB          2.17 KiB
+  dist/js/647.e19cb323.js                5.30 KiB          1.97 KiB
+  dist/js/test.fd622619.js               2.43 KiB          1.27 KiB
+  dist/js/about.ca11c3eb.js              2.37 KiB          1.11 KiB
+  dist/js/column.7bd67a66.js             1.83 KiB          0.95 KiB
+  dist/js/110.d13e9a19.js                0.91 KiB          0.39 KiB
+  dist/css/chunk-vendors.bd5f110b.css    325.68 KiB        45.91 KiB
+  dist/css/article.bdb34855.css          2.80 KiB          0.91 KiB
+  dist/css/about.87613cef.css            2.43 KiB          0.85 KiB
+  dist/css/column.7707f4da.css           1.76 KiB          0.67 KiB
+  dist/css/login.bb871dab.css            1.44 KiB          0.57 KiB
+  dist/css/test.aba54d8a.css             0.09 KiB          0.10 KiB
+  dist/css/app.7e36afa8.css              0.05 KiB          0.07 KiB
+
+  Images and other types of assets omitted.
+  Build at: 2024-09-16T07:43:00.619Z - Hash: f471fe09060c4673 - Time: 8832ms
+
+ DONE  Build complete. The dist directory is ready to be deployed.
+ INFO  Check out deployment instructions at https://cli.vuejs.org/guide/deployment.html
+       

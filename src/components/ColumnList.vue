@@ -64,7 +64,7 @@ ul {
   //height:282px;
   margin-bottom: 18px;
 
-  ::v-deep(.el-card__body) {
+  :deep(.el-card__body) {
     padding: 0;
   }
 
@@ -76,7 +76,7 @@ ul {
     overflow: hidden !important;
     position: relative;
 
-    ::v-deep(img) {
+    :deep(img) {
       box-sizing: border-box;
       //border:10px solid deeppink;
       position: absolute;

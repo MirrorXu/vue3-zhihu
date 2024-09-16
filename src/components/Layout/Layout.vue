@@ -39,7 +39,7 @@ const user  = computed(() => store.state.user)
   }
 }
 
-::v-deep(.el-header) {
+:deep(.el-header) {
   border-bottom: 1px solid var(--el-color-primary);
 }
 </style>

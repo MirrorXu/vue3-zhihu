@@ -176,7 +176,7 @@ function doRest() {
     border-radius: 2px;
     width: 300px;
 
-    ::v-deep(.btns) {
+    :deep(.btns) {
       display: flex;
       margin-top: 10px;
       justify-content: center;

@@ -86,8 +86,9 @@ defineExpose({
   justify-content: stretch;
   width: 100%;
   //border: 1px solid deeppink;
-  ::v-deep .EasyMDEContainer{
+  :deep .EasyMDEContainer{
     width: 100% !important;
+    //background-color: deeppink;
   }
 }
 </style>

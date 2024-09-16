@@ -37,6 +37,6 @@ npm run lint
 - bootStrap
 - tailwindcss
 
-## 服务接口
+## 有趣的接口
 - [Dog API](https://dog.ceo/dog-api/breeds-list)
 - 

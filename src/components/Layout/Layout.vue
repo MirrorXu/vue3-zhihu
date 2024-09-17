@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <GlobalHeader :user="user">
+      <GlobalHeader>
         <template #site-title>
           <slot name="site-title"></slot>
         </template>
@@ -9,18 +9,14 @@
     </el-header>
     <el-main>
       <Container class="content">
-        <slot v-bind:user="user"></slot>
+        <slot></slot>
       </Container>
     </el-main>
   </el-container>
 </template>
 <script setup lang="ts">
-import {useStore} from "vuex";
 import GlobalHeader from "@/components/GlobalHeader.vue";
 import Container from "@/components/Container.vue";
-import {computed} from "vue";
-const store = useStore()
-const user  = computed(() => store.state.user)
 </script>
 
 <style scoped lang="scss">
@@ -28,13 +24,15 @@ const user  = computed(() => store.state.user)
   min-height: 100vh;
   //background-color: deeppink;
 }
+
 .el-main {
   padding: 0;
   //background-color: darkgoldenrod;
-  $height:calc( 100vh - var(--el-header-height) );
+  $height: calc(100vh - var(--el-header-height));
   min-height: $height;
-  .content{
-     min-height: $height !important;
+
+  .content {
+    min-height: $height !important;
     background-color: #d0fae7;
   }
 }

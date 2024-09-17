@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import routes from "./routes";
-import store from "@/store";
+import {useUserStore} from '@/store/pinia'
 
 const baseUrl = process.env.BASE_URL
 const history = createWebHistory(baseUrl)
@@ -22,7 +22,8 @@ router.beforeEach((to, from, next) => {
             next({name: 'login'})
         }
     } else {
-        store.dispatch('getCurrentUser').then(user => {
+        const userStore = useUserStore()
+        userStore.getCurrentUser().then(user => {
             console.log(user)
             next()
         }).catch(() => {

@@ -1,23 +1,40 @@
 <script setup lang="ts">
 import Layout from "@/components/Layout/Layout.vue";
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
+import {reactive} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import store from "@/store";
 const route = useRoute()
 const router = useRouter()
 import {formatTime} from '@/helper'
-import {computed, onBeforeMount} from "vue";
-import {Article} from "@/api/responseType";
+import {Article, Column} from "@/api/responseType";
+import {fetchColumnArticles, fetchColumnDetail} from '@/api/api'
+
+// 专栏id
 const id = route.params.id
 
-onBeforeMount(()=>{
-  store.dispatch('fetchColumnDetail' , id)
-  store.dispatch('fetchColumnArticles' , id)
-  console.log('sdsd')
+interface RES_ARTICLE {
+  list: Array<Article>,
+  count: number,
+  currentPage: number,
+}
+
+const columnDetail = reactive<Column>({} as Column)
+const columnArticles = reactive<RES_ARTICLE>({
+  list: [],
+  count: 20,
+  currentPage: 0,
 })
-const columnDetail = computed(()=> store.state.columnDetail)
-const columnArticles = computed(()=> store.state.columnArticles)
-function handleClick(article:Article) {
+
+fetchColumnDetail<Column>(id as string).then(response => {
+  Object.assign(columnDetail, response.data)
+})
+
+fetchColumnArticles<RES_ARTICLE>(id as string).then(response => {
+  Object.assign(columnArticles, response.data)
+})
+
+
+function handleClick(article: Article) {
   router.push({name: 'articleDetails', params: {id: article._id}});
 }
 
@@ -34,17 +51,17 @@ function handleClick(article:Article) {
     </template>
     <div>
       <h2>专栏：{{ columnDetail.title }}</h2>
-      <p>{{columnDetail.description}}</p>
+      <p>{{ columnDetail.description }}</p>
     </div>
 
     <div>
-      <div class="article" v-for="article in columnArticles" :key="article._id" @click="handleClick(article)">
+      <div class="article" v-for="article in columnArticles.list" :key="article._id" @click="handleClick(article)">
         <el-image fit="cover" :src="article.image?.url" round></el-image>
-       <div style="margin-left: 20px">
-         <h3>{{ article.title }}</h3>
-         <p>作者：{{ article.author }}</p>
-         <p>发布时间: {{formatTime(article.createdAt , 'YYYY-MM-DD HH:mm:ss')}}</p>
-       </div>
+        <div style="margin-left: 20px">
+          <h3>{{ article.title }}</h3>
+          <p>作者：{{ article.author }}</p>
+          <p>发布时间: {{ formatTime(article.createdAt, 'YYYY-MM-DD HH:mm:ss') }}</p>
+        </div>
       </div>
     </div>
   </Layout>
@@ -54,17 +71,20 @@ function handleClick(article:Article) {
 .title {
   color: var(--jjext-color-font-2);
 }
-.article{
+
+.article {
   display: flex;
   justify-content: stretch;
   box-sizing: border-box;
   box-shadow: 0px 0px 2px 2px var(--jjext-color-shadow);
   margin-bottom: 10px;
   padding: 10px;
-  &:hover{
+
+  &:hover {
     background-color: var(--jjext-color-hover-bg);
   }
-  .el-image{
+
+  .el-image {
     width: 30%;
   }
 }

@@ -35,14 +35,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, ref ,watch} from "vue";
-import {useStore} from "vuex";
+import {reactive, ref, watch} from "vue";
 import MyInput from "@/components/Form/MyInput.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import {useRouter, useRoute} from 'vue-router'
 import {isAxiosError} from "axios";
 import {createMessage} from "@/components/Message/createMessage";
+import {useUserStore} from '@/store/pinia'
 
+const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 console.log('router:', router)
@@ -51,7 +52,7 @@ export type LoginType = 'login' | 'register'
 
 const type = (route.query.type as LoginType) || 'login'
 const formType = ref<string>(type)
-watch(()=> route.query.type , (newVal)=>{
+watch(() => route.query.type, (newVal) => {
   formType.value = newVal as string
 })
 
@@ -94,12 +95,6 @@ const form = reactive({
 // eslint-disable
 const refForm = ref()
 
-// function handleSubmit(e) {
-//   console.log(e)
-// }
-
-const store = useStore()
-
 function doSubmit() {
   refForm.value.validate().then(
       () => {
@@ -108,24 +103,24 @@ function doSubmit() {
           password: form.password.value,
         }
         if (formType.value === 'register') {
-          Object.assign(user, {nickName: form.nickName.value})
-          return store.dispatch('register', user).then(
+          const registerData = Object.assign({}, user, {nickName: form.nickName.value})
+          return userStore.register(registerData).then(
               () => {
                 console.log('注册成功，请登录')
                 let url = '/login?type=login'
-                createMessage('注册成功,请登录' ,'success')
-                setTimeout(()=>{
+                createMessage('注册成功,请登录', 'success')
+                setTimeout(() => {
                   router.replace(url)
-                },1000)
+                }, 1000)
               },
-              function (err){
+              function (err) {
                 const {data} = err.response
                 const {error: message} = data
-                createMessage(message || '注册失败' , 'error' )
+                createMessage(message || '注册失败', 'error')
               }
           )
-        } else if (formType.value=== 'login') {
-          store.dispatch('loginAndFetchUerData', user).then(
+        } else if (formType.value === 'login') {
+          userStore.loginAndFetchUerData(user).then(
               () => {
                 console.log('登录成功')
                 const redirect = localStorage.getItem('login_redirect') || '/'

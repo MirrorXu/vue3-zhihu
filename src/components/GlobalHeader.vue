@@ -1,21 +1,14 @@
 <script setup lang="ts">
-import { useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import UserDropdown from '@/components/UserDropDown.vue'
-import {PropType, defineProps} from "vue";
-import {User} from '@/api/responseType'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import {LoginType} from '@/views/Login.vue'
-defineProps({
-  user: {
-    type: Object as PropType<User>,
-    required: true,
-  }
-})
+import {useUserStore} from "@/store/pinia";
+const userStore = useUserStore();
+const router = useRouter()
 
-const router =  useRouter()
-
-const goLogin = ( type:LoginType)=>{
-  router.push({name:'login' , query:{type}})
+const goLogin = (type: LoginType) => {
+  router.push({name: 'login', query: {type}})
 }
 
 </script>
@@ -26,12 +19,12 @@ const goLogin = ( type:LoginType)=>{
       <SiteTitle></SiteTitle>
     </slot>
     <div class="right">
-      <template v-if="!user._id">
+      <template v-if="!userStore.user._id">
         <el-button plain type="primary" @click="goLogin('login')">登录</el-button>
         <el-button type="primary" @click="goLogin('register')">注册</el-button>
       </template>
       <template v-else>
-        <UserDropdown :user="user"></UserDropdown>
+        <UserDropdown></UserDropdown>
       </template>
 
     </div>

@@ -45,14 +45,14 @@ import SiteTitle from "@/components/Layout/SiteTitle.vue";
 import MyForm from "@/components/Form/MyForm.vue";
 import MyInput, {RuleItem} from "@/components/Form/MyInput.vue";
 import {reactive, ref} from "vue";
-import store from "@/store";
 import {selectFiles} from '@/helper/file'
 import {upload, creatArticle, CreateArticleForm, fetchArticleDetails, updateArticle} from '@/api/api'
 import {Image} from "@/api/responseType";
 import router from "@/router";
 import {createMessage} from "@/components/Message/createMessage";
 import {useRoute} from "vue-router";
-
+import {useUserStore} from "@/store/pinia";
+const userStore = useUserStore()
 const editorOptions: Options = reactive<Options>({spellChecker: false})
 const commonRules: Array<RuleItem> = [
   {type: 'required', message: '内容不能为空'}
@@ -115,8 +115,8 @@ const getFormData = () => {
   const data: CreateArticleForm = {
     title: form.title.value,
     content: form.content.value,
-    author: store.state.user._id,
-    column: store.state.user.column
+    author: userStore.user._id,
+    column: userStore.user.column
   }
   if (headerImage._id) {
     data.image = headerImage._id || ''

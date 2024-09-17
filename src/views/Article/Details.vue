@@ -42,10 +42,10 @@ import {useRoute} from "vue-router";
 import Layout from "@/components/Layout/Layout.vue";
 import model from '@/components/Model/Model.vue'
 import SiteTitle from "@/components/Layout/SiteTitle.vue";
-import store from "@/store";
 import router from "@/router";
 import {marked} from 'marked'
-
+import {useUserStore} from "@/store/pinia";
+const userStore = useUserStore()
 const article = reactive<RES_CreateArticle>({} as RES_CreateArticle)
 const articleContent = computed(() => {
   if (article?.content) {
@@ -58,7 +58,7 @@ const articleContent = computed(() => {
 })
 const isAuthor = computed(() => {
   // console.log(article.author._id  , store.state.user._id)
-  return article?.author?._id === store?.state?.user?._id
+  return article?.author?._id === userStore.user._id
 })
 const route = useRoute();
 const {id} = route.params;
